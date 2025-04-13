@@ -189,37 +189,64 @@ def get_rate_with_fallback(date_obj, daily_interest_map):
 def pick_strike_nearest_underlying(underlying, options_data):
     """
     Among all strikes in options_data, pick the single strike that is closest
-    to the 'underlying' price. Must have CE & PE of the same expiry.
+    to the 'underlying' price and is available with both CE & PE for the
+    nearest, next-nearest, and next-to-next-nearest expiry.
+    Returns:
+        ce_row_30d, ce_row_60d, ce_row_90d,
+        pe_row_30d, pe_row_60d, pe_row_90d,
+        chosen_strike
     """
     candidates = []
 
-    # Find the nearest expiry to today
+    # Ensure datetime format
     options_data = options_data.copy()
     options_data['EXPIRY_DT'] = pd.to_datetime(options_data['EXPIRY_DT'], errors='coerce')
     if options_data['EXPIRY_DT'].isnull().all():
         return None
 
-    nearest_expiry = options_data['EXPIRY_DT'].min()
-    filtered_data = options_data[options_data['EXPIRY_DT'] == nearest_expiry]
+    # Get first 3 unique expiry dates
+    unique_expiries = sorted(options_data['EXPIRY_DT'].dropna().unique())
+    if len(unique_expiries) < 3:
+        return None
 
-    for strike_price in filtered_data['STRIKE_PR'].unique():
-        sub_df = filtered_data[filtered_data['STRIKE_PR'] == strike_price]
-        ce_data = sub_df[sub_df['OPTION_TYP'] == 'CE']
-        pe_data = sub_df[sub_df['OPTION_TYP'] == 'PE']
+    expiry_30d = unique_expiries[0]
+    expiry_60d = unique_expiries[1]
+    expiry_90d = unique_expiries[2]
 
-        if len(ce_data) > 0 and len(pe_data) > 0:
-            ce_row = ce_data.iloc[0]
-            pe_row = pe_data.iloc[0]
-            diff = abs(float(strike_price) - underlying)
-            candidates.append((diff, strike_price, ce_row, pe_row))
+    data_30d = options_data[options_data['EXPIRY_DT'] == expiry_30d]
+    data_60d = options_data[options_data['EXPIRY_DT'] == expiry_60d]
+    data_90d = options_data[options_data['EXPIRY_DT'] == expiry_90d]
+
+    # Try to find a strike that exists in all 3 expiries and has both CE and PE
+    common_strikes = set(data_30d['STRIKE_PR'].unique()) & \
+                     set(data_60d['STRIKE_PR'].unique()) & \
+                     set(data_90d['STRIKE_PR'].unique())
+
+    for strike_price in common_strikes:
+        strike_price = float(strike_price)
+
+        def get_rows(data, strike):
+            sub = data[data['STRIKE_PR'] == strike]
+            ce = sub[sub['OPTION_TYP'] == 'CE']
+            pe = sub[sub['OPTION_TYP'] == 'PE']
+            return ce.iloc[0] if not ce.empty else None, pe.iloc[0] if not pe.empty else None
+
+        ce_30d, pe_30d = get_rows(data_30d, strike_price)
+        ce_60d, pe_60d = get_rows(data_60d, strike_price)
+        ce_90d, pe_90d = get_rows(data_90d, strike_price)
+
+        diff = abs(strike_price - underlying)
+        candidates.append((diff, strike_price, ce_30d, pe_30d, ce_60d, pe_60d, ce_90d, pe_90d))
 
     if not candidates:
         return None
 
+    # Sort by closest to underlying
     candidates.sort(key=lambda x: x[0])
-    best = candidates[0]
-    
-    return best[2], best[3], best[1]
+    _, chosen_strike, ce_30d, pe_30d, ce_60d, pe_60d, ce_90d, pe_90d = candidates[0]
+
+    return ce_30d, ce_60d, ce_90d, pe_30d, pe_60d, pe_90d, chosen_strike
+
 
 
 #############################################################################
@@ -416,6 +443,7 @@ def main():
                     options_data['EXPIRY_DT'], format='%d-%b-%Y', errors='coerce'
                 )
 
+
                 eq_data = symbol_data[symbol_data['INSTRUMENT'] == 'EQ']                
                     
                 chosen = pick_strike_nearest_underlying(spot_price, options_data)
@@ -424,10 +452,10 @@ def main():
                 if not chosen:
                     # No valid single strike
                     continue
-                ce_row, pe_row, chosen_strike = chosen
+                ce_row_30d, ce_row_60d, ce_row_90d, pe_row_30d, pe_row_60d, pe_row_90d, chosen_strike = chosen
 
                 # Time to expiry (from CE row)
-                opt_expiry = ce_row['EXPIRY_DT']
+                opt_expiry = ce_row_30d['EXPIRY_DT']
                 if pd.isnull(opt_expiry):
                     # T = 0.0
                     T_30 = 0.0
@@ -442,11 +470,16 @@ def main():
                 
                 r_decimal = (fallback_rate / 100.0) if fallback_rate else 0.0
                 
-                ce_price = float(ce_row['SETTLE_PR'])
-                pe_price = float(pe_row['SETTLE_PR'])
+                
+                ce_30d_price = float(ce_row_30d['SETTLE_PR'])
+                ce_60d_price = float(ce_row_60d['SETTLE_PR'])
+                ce_90d_price = float(ce_row_90d['SETTLE_PR'])
+                pe_30d_price = float(pe_row_30d['SETTLE_PR'])
+                pe_60d_price = float(pe_row_60d['SETTLE_PR'])
+                pe_90d_price = float(pe_row_90d['SETTLE_PR'])
 
                 ce_iv_30 = implied_volatility_bisection(
-                    market_price=ce_price,
+                    market_price=ce_30d_price,
                     S=float(spot_price),
                     K=float(chosen_strike),
                     T=T_30,
@@ -454,7 +487,7 @@ def main():
                     is_call=True
                 ) * 100.0
                 pe_iv_30 = implied_volatility_bisection(
-                    market_price=pe_price,
+                    market_price=pe_30d_price,
                     S=float(spot_price),
                     K=float(chosen_strike),
                     T=T_30,
@@ -463,7 +496,7 @@ def main():
                 ) * 100.0
                 
                 ce_iv_60 = implied_volatility_bisection(
-                    market_price=ce_price,
+                    market_price=ce_60d_price,
                     S=float(spot_price),
                     K=float(chosen_strike),
                     T=T_60,
@@ -472,7 +505,7 @@ def main():
                 ) * 100.0
                 
                 pe_iv_60 = implied_volatility_bisection(
-                    market_price=pe_price,
+                    market_price=pe_60d_price,
                     S=float(spot_price),
                     K=float(chosen_strike),
                     T=T_60,
@@ -481,7 +514,7 @@ def main():
                 ) * 100.0
                 
                 ce_iv_90 = implied_volatility_bisection(
-                    market_price=ce_price,
+                    market_price=ce_90d_price,
                     S=float(spot_price),
                     K=float(chosen_strike),
                     T=T_90,
@@ -490,7 +523,7 @@ def main():
                 ) * 100.0
                 
                 pe_iv_90 = implied_volatility_bisection(
-                    market_price=pe_price,
+                    market_price=pe_90d_price,
                     S=float(spot_price),
                     K=float(chosen_strike),
                     T=T_90,
@@ -506,17 +539,18 @@ def main():
                 # Merge data
                 result["historical"]["scripts"][symbol]["timestamps"][date_key].update({
                     "strike_price": float(chosen_strike),
+                    "rv_yz": None,
                     "ce": {
                         "iv_30": ce_iv_30,
                         "iv_60": ce_iv_60,
                         "iv_90": ce_iv_90,
-                        "open_interest": int(ce_row['OPEN_INT']),
+                        # "open_interest": int(ce_row['OPEN_INT']),
                         "volume": ce_volume,
-                        "last_price": ce_price,
-                        "close": float(ce_row['CLOSE']),
-                        "open": float(ce_row['OPEN']),
-                        "high": float(ce_row['HIGH']),
-                        "low": float(ce_row['LOW']),
+                        "last_price": ce_30d_price,
+                        "close": float(ce_row_30d['CLOSE']),
+                        "open": float(ce_row_30d['OPEN']),
+                        "high": float(ce_row_30d['HIGH']),
+                        "low": float(ce_row_30d['LOW']),
                         "iv_30d_percentile": None,
                         "iv_30d_rank": None,
                     },
@@ -524,13 +558,13 @@ def main():
                         "iv_30": pe_iv_30,
                         "iv_60": pe_iv_60,
                         "iv_90": pe_iv_90,
-                        "open_interest": int(pe_row['OPEN_INT']),
+                        # "open_interest": int(pe_row['OPEN_INT']),
                         "volume": pe_volume,
-                        "last_price": pe_price,
-                        "close": float(pe_row['CLOSE']),
-                        "open": float(pe_row['OPEN']),
-                        "high": float(pe_row['HIGH']),
-                        "low": float(pe_row['LOW']),
+                        "last_price": pe_30d_price,
+                        "close": float(pe_row_30d['CLOSE']),
+                        "open": float(pe_row_30d['OPEN']),
+                        "high": float(pe_row_30d['HIGH']),
+                        "low": float(pe_row_30d['LOW']),
                         "iv_30d_percentile": None,
                         "iv_30d_rank": None,
                     }
@@ -712,9 +746,46 @@ def main():
 
     # Apply NaN/Inf replacement
     replace_nan_inf(result)
-                
-                
+    
+    
+    
+    # ----------------------------------------------------------------------
+    # ADD UPCOMING EARNINGS DATES FROM earnings_dates.json
+    # ----------------------------------------------------------------------
 
+    earnings_file = os.path.join(base_dir, "earning_dates", "earning_dates.json")
+    if os.path.exists(earnings_file):
+        with open(earnings_file, "r") as f:
+            earnings_data = json.load(f)
+            
+        earnings_map = {}
+        
+        for item in earnings_data:
+            if item.get("event_type") == "stock_results" and "trading_symbol" in item and "date" in item:
+                try:
+                    symbol = item["trading_symbol"]
+                    dt = datetime.strptime(item["date"], "%Y-%m-%d")
+                    earnings_map.setdefault(symbol, []).append(dt)
+                except Exception as e:
+                    print(f"[EARNINGS] Failed to parse date for {item.get('trading_symbol')}: {e}")
+
+        for symbol in symbols:
+
+            earnings_dates = earnings_map[symbol]
+            earnings_dt_objs = sorted(earnings_dates)
+
+            time_map = result["historical"]["scripts"][symbol]["timestamps"]
+            for d_str in time_map:
+                try:
+                    current_dt = datetime.strptime(d_str, "%d-%b-%Y")
+                    future_dates = [dt for dt in earnings_dt_objs if dt > current_dt]
+                    if future_dates:
+                        upcoming = future_dates[0].strftime("%d-%b-%Y")
+                        time_map[d_str]["upcoming_earning_date"] = upcoming
+                except Exception as e:
+                    print(f"[EARNINGS] Error for {symbol} at {d_str}: {e}")
+                    
+                
     # ----------------------------------------------------------------------
     #  SAVE PROCESSED DATA
     # ----------------------------------------------------------------------
