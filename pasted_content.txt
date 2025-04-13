@@ -1,0 +1,51 @@
+{
+  "historical": {
+    "scripts": {
+      "HDFCBANK": {
+        "exchange": "NSE",
+        "segment": "Options",
+        "timestamps": {
+          "01-Apr-2025": {
+            "interest_rate":7.40,
+            "upcoming_earning_date": "23-Jul-2025",
+            "expiry_30d": "24-Apr-2025",
+            "expiry_60d": "29-May-2025",
+            "expiry_90d": "26-Jun-2025",
+            "underlying_price": 1805.2,
+            "strike_price": 1820,
+            "ce": {
+              "iv_30": 43.2,
+              "iv_60": 32.3,
+              "iv_90": 43.2,
+              "rv": 54.2,
+              "open_interest": 343434,
+              "volume": 3434343,
+              "last_price": 2223.32,
+              "close": 433.22,
+              "open":33.33,
+              "high":33.33,
+              "low":33.3,
+              "iv_30d_percentile": 9.1,
+              "iv_30d_rank": 2
+            },
+            "pe": {
+              "iv_30": 43.2,
+              "iv_60": 32.3,
+              "iv_90": 43.2,
+              "rv": 54.2,
+              "open_interest": 343434,
+              "volume": 3434343,
+              "last_price": 2223.32,
+              "close": 433.22,
+              "open":33.33,
+              "high":33.33,
+              "low":33.3,
+              "iv_30d_percentile": 9.1,
+              "iv_30d_rank": 2
+            }
+          }
+        }
+      }
+    }
+  }
+}
