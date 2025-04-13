@@ -253,7 +253,7 @@ def pick_strike_nearest_underlying(underlying, options_data):
 #                          TIME-TO-EXPIRY FUNCTION                          #
 #############################################################################
 
-def get_time_to_expiry_in_years(expiry_str):
+def get_time_to_expiry_in_years(date_key, expiry_str):
     """
     Converts an expiry date string like '25-Apr-2025' into the fractional
     number of years until expiry from the current time in India.
@@ -263,15 +263,27 @@ def get_time_to_expiry_in_years(expiry_str):
     expiry_date = india_tz.localize(expiry_naive)
     
     now_india = datetime.now(india_tz)
-    time_diff = expiry_date - now_india
+    
+    # Convert date_key (string) to datetime 
+    as_of_naive = datetime.strptime(date_key, "%d-%b-%Y")
+    as_of_date = india_tz.localize(as_of_naive)
+    
+    # time_diff = expiry_date - now_india
+    time_diff = expiry_date - as_of_date
     
     days_to_expiry = time_diff.days + time_diff.seconds / 86400.0
     days_to_expiry = max(0, days_to_expiry)  # clamp negative to zero
     
-    # Approx with 300 days a year:
-    return days_to_expiry / 300.0
+    # Approx with days in a year:
+    return days_to_expiry / 340.0
 
-
+def get_option_expiry(option_row):
+    """Safely extract expiry date from option row"""
+    try:
+        return option_row['EXPIRY_DT'].strftime('%d-%b-%Y')
+    except (KeyError, AttributeError):
+        return None
+    
 #############################################################################
 #                            MAIN PROCESSING                                 #
 #############################################################################
@@ -462,9 +474,9 @@ def main():
                     T_60 = 0.0
                     T_90 = 0.0
                 else:
-                    T_30 = get_time_to_expiry_in_years(all_fut_expiries_sorted[0].strftime('%d-%b-%Y'))
-                    T_60 = get_time_to_expiry_in_years(all_fut_expiries_sorted[1].strftime('%d-%b-%Y'))
-                    T_90 = get_time_to_expiry_in_years(all_fut_expiries_sorted[2].strftime('%d-%b-%Y'))
+                    T_30 = get_time_to_expiry_in_years(date_key, all_fut_expiries_sorted[0].strftime('%d-%b-%Y'))
+                    T_60 = get_time_to_expiry_in_years(date_key, all_fut_expiries_sorted[1].strftime('%d-%b-%Y'))
+                    T_90 = get_time_to_expiry_in_years(date_key, all_fut_expiries_sorted[2].strftime('%d-%b-%Y'))
                 
                     # T = get_time_to_expiry_in_years(opt_expiry.strftime('%d-%b-%Y'))
                 
