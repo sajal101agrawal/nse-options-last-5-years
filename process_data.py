@@ -176,7 +176,7 @@ def yang_zhang_volatility(ohlc_df, trading_periods=252):
     yz_vol = math.sqrt(yz_variance * trading_periods)
     return yz_vol
 
-def compute_yz_rolling_vol_with_extension(df, window=30, max_lookback=90, trading_periods=252):
+
     """
     Given a daily OHLC DataFrame (with columns Date,Open,High,Low,Close),
     compute a rolling Yang-Zhang realized vol over the specified window.
@@ -198,7 +198,6 @@ def compute_yz_rolling_vol_with_extension(df, window=30, max_lookback=90, tradin
     dates = df.index
     
     for i in range(len(dates)):
-        current_date = dates[i]
         
         # Start with the standard window
         valid_data_points = []
@@ -235,6 +234,62 @@ def compute_yz_rolling_vol_with_extension(df, window=30, max_lookback=90, tradin
     
     result_series = pd.Series(yz_values, index=dates, name='YZ_Vol')
     return result_series
+
+def compute_yz_rolling_vol(df, window=30, max_lookback=120, trading_periods=252):
+    """
+    Computes Yang-Zhang volatility with special handling for gaps in the data.
+    Looks for 'window' valid trading days within 'max_lookback' calendar days.
+    """
+    # Sort by date
+    df = df.sort_values('Date')
+    
+    # Create a continuous date range to identify gaps
+    min_date = df['Date'].min()
+    max_date = df['Date'].max()
+    all_business_days = pd.date_range(start=min_date, end=max_date, freq='B')
+    
+    # Create a lookup dictionary for quick access
+    data_by_date = {row['Date']: row for _, row in df.iterrows()}
+    
+    # Calculate volatility for each date
+    results = []
+    
+    for date in df['Date'].unique():
+        # Look back from current date to find window valid trading days
+        valid_data = []
+        lookback_days = 0
+        current_date = date
+        
+        while len(valid_data) < window and lookback_days < max_lookback:
+            # Go back one business day
+            business_days = pd.date_range(end=current_date, periods=2, freq='B')
+            if len(business_days) < 2:
+                break
+                
+            prev_business_day = business_days[0]
+            
+            # Check if we have data for this business day
+            if prev_business_day in data_by_date:
+                row = data_by_date[prev_business_day]
+                
+                # Validate OHLC data
+                if (row['Open'] > 0 and row['High'] > 0 and 
+                    row['Low'] > 0 and row['Close'] > 0):
+                    valid_data.append(row)
+            
+            current_date = prev_business_day
+            lookback_days += 1
+        
+        # Calculate YZ volatility if we have enough data
+        if len(valid_data) == window:
+            valid_df = pd.DataFrame(valid_data)
+            rv = yang_zhang_volatility(valid_df, trading_periods)
+        else:
+            rv = float('nan')
+            
+        results.append({'Date': date, 'RV': rv})
+    
+    return pd.DataFrame(results).set_index('Date')['RV']
 
 #############################################################################
 #               INTEREST-RATE FALLBACK (NEAREST EARLIER DATE)               #
@@ -706,7 +761,7 @@ def main():
         print(f"Symbol {symbol}: {len(rows)} days of OHLC data available")
         
         # compute rolling yz with window extension
-        yz_series = compute_yz_rolling_vol_with_extension(ohlc_df, window=window, max_lookback=max_lookback, trading_periods=252)
+        yz_series = compute_yz_rolling_vol(ohlc_df, window=window, max_lookback=max_lookback, trading_periods=252)
         
         # yz_series is indexed by date. We'll match each date to the relevant date_str in result
         symbol_filled = 0
@@ -917,6 +972,50 @@ def main():
                 except Exception as e:
                     print(f"[EARNINGS] Error for {symbol} at {d_str}: {e}")
                     
+    def fill_missing_rv_with_interpolation(result):
+        """
+        Fill missing RV values using linear interpolation between known values.
+        """
+        for symbol in result["historical"]["scripts"]:
+            timestamps = result["historical"]["scripts"][symbol]["timestamps"]
+            
+            # Extract dates and RV values
+            dates = []
+            rv_values = []
+            
+            for date_str, data in timestamps.items():
+                try:
+                    date = datetime.strptime(date_str, "%d-%b-%Y")
+                    rv = data.get("rv_yz")
+                    dates.append(date)
+                    rv_values.append(rv)
+                except:
+                    continue
+            
+            # Create DataFrame for interpolation
+            if dates:
+                df = pd.DataFrame({"date": dates, "rv": rv_values})
+                df = df.sort_values("date")
+                
+                # Interpolate missing values
+                df["rv_interpolated"] = df["rv"].interpolate(method="linear")
+                
+                # Update the result with interpolated values
+                for i, row in df.iterrows():
+                    date_str = row["date"].strftime("%d-%b-%Y")
+                    if date_str in timestamps and timestamps[date_str].get("rv_yz") is None:
+                        # Check if the interpolated value is valid (not NaN or NaT)
+                        if pd.notna(row["rv_interpolated"]):
+                            timestamps[date_str]["rv_yz"] = row["rv_interpolated"]
+                        else:
+                            # Keep it as null
+                            timestamps[date_str]["rv_yz"] = None
+        
+        return result
+
+             
+    # Fill missing RV values with interpolation
+    result = fill_missing_rv_with_interpolation(result)       
                 
     # ----------------------------------------------------------------------
     #  10) SAVE PROCESSED DATA
