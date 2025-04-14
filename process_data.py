@@ -605,7 +605,7 @@ def main():
             date_key = date_idx.strftime('%d-%b-%Y')
             if date_key in result["historical"]["scripts"][symbol]["timestamps"]:
                 if np.isfinite(yz_val):
-                    result["historical"]["scripts"][symbol]["timestamps"][date_key]["rv_yz"] = yz_val
+                    result["historical"]["scripts"][symbol]["timestamps"][date_key]["rv_yz"] = yz_val * 100.0
                 else:
                     # If YZ is NaN or inf, store None
                     result["historical"]["scripts"][symbol]["timestamps"][date_key]["rv_yz"] = None
