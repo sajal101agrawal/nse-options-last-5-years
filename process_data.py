@@ -177,64 +177,6 @@ def yang_zhang_volatility(ohlc_df, trading_periods=252):
     return yz_vol
 
 
-    """
-    Given a daily OHLC DataFrame (with columns Date,Open,High,Low,Close),
-    compute a rolling Yang-Zhang realized vol over the specified window.
-    
-    This function extends the window backward until we have exactly 'window' valid data points,
-    or until we've looked back 'max_lookback' days, whichever comes first.
-    
-    If a day doesn't have data, we continue extending until we find enough valid data points.
-    
-    Returns a pd.Series with the same date index, each row is the YZ vol
-    computed over the prior available days (including current day).
-    """
-    # Sort by date just in case
-    df = df.sort_values('Date')
-    df.set_index('Date', inplace=True)
-    
-    # We'll do a simple approach using a loop with window extension:
-    yz_values = []
-    dates = df.index
-    
-    for i in range(len(dates)):
-        
-        # Start with the standard window
-        valid_data_points = []
-        lookback_days = 0
-        
-        # Keep looking back until we have enough valid data points or reach max lookback
-        j = i
-        while len(valid_data_points) < window and j >= 0 and lookback_days < max_lookback:
-            # Check if this day has valid OHLC data
-            day_data = df.iloc[j]
-            
-            # Check if the data is valid (not NaN, not zero, etc.)
-            if (not pd.isna(day_data['Open']) and not pd.isna(day_data['High']) and 
-                not pd.isna(day_data['Low']) and not pd.isna(day_data['Close']) and
-                day_data['Open'] > 0 and day_data['High'] > 0 and 
-                day_data['Low'] > 0 and day_data['Close'] > 0):
-                valid_data_points.append(day_data)
-            
-            j -= 1
-            lookback_days += 1
-        
-        # Convert valid data points to a DataFrame
-        if len(valid_data_points) == window:
-            # We have exactly the right number of valid data points
-            valid_df = pd.DataFrame(valid_data_points)
-            # Reverse the order to be chronological
-            valid_df = valid_df.iloc[::-1]
-            rv = yang_zhang_volatility(valid_df, trading_periods)
-        else:
-            # Not enough valid data points even after extending
-            rv = float('nan')
-            
-        yz_values.append(rv)
-    
-    result_series = pd.Series(yz_values, index=dates, name='YZ_Vol')
-    return result_series
-
 def compute_yz_rolling_vol(df, window=30, max_lookback=120, trading_periods=252):
     """
     Computes Yang-Zhang volatility with special handling for gaps in the data.
@@ -691,9 +633,17 @@ def main():
                 # Volume => here we store 'CONTRACTS'. If we want total shares, multiply by lot size or use a different column
                 ce_volume = int(options_data[options_data['OPTION_TYP'] == 'CE']['CONTRACTS'].sum())
                 pe_volume = int(options_data[options_data['OPTION_TYP'] == 'PE']['CONTRACTS'].sum())
+                
+                if ce_iv_30 > 0 and T_30 > 0:
+                    greeks_ce_30 = black_scholes_greeks(float(spot_price), float(chosen_strike), T_30, r_decimal, ce_iv_30 / 100.0, is_call=True)
+                else:
+                    greeks_ce_30 = {"delta": 0.0, "gamma": 0.0, "theta": 0.0, "vega": 0.0, "rho": 0.0}
+                
+                if pe_iv_30 > 0 and T_30 > 0:
+                    greeks_pe_30 = black_scholes_greeks(float(spot_price), float(chosen_strike), T_30, r_decimal, pe_iv_30 / 100.0, is_call=False)
+                else:
+                    greeks_pe_30 = {"delta": 0.0, "gamma": 0.0, "theta": 0.0, "vega": 0.0, "rho": 0.0}
 
-                greeks_ce_30 = black_scholes_greeks(float(spot_price), float(chosen_strike), T_30, r_decimal, ce_iv_30 / 100.0, is_call=True)
-                greeks_pe_30 = black_scholes_greeks(float(spot_price), float(chosen_strike), T_30, r_decimal, pe_iv_30 / 100.0, is_call=False)
 
 
                 # Merge data
@@ -975,6 +925,7 @@ def main():
     def fill_missing_rv_with_interpolation(result):
         """
         Fill missing RV values using linear interpolation between known values.
+        Keeps earliest values as null instead of NaT.
         """
         for symbol in result["historical"]["scripts"]:
             timestamps = result["historical"]["scripts"][symbol]["timestamps"]
