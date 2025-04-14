@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HDFCBANK | IV/RV Analysis Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">IV/RV Analysis Dashboard</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#overview">Overview</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#time-series">Time Series</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#term-structure">Term Structure</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#skew-analysis">Skew Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#distributions">Distributions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#verification">Verification Results</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+      <section id="overview" class="mb-5">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h2>HDFCBANK Options Analysis Dashboard</h2>
+              </div>
+              <div class="card-body">
+                <p>
+                  This dashboard provides an interactive analysis of Implied
+                  Volatility (IV) and Realized Volatility (RV) for HDFCBANK
+                  options. The data spans multiple time periods and includes
+                  various metrics for both call and put options.
+                </p>
+
+                <div class="row mt-4">
+                  <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                      <div class="card-body">
+                        <h5 class="card-title">Data Points</h5>
+                        <p class="card-text display-4" id="data-points-count">
+                          1,234
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                      <div class="card-body">
+                        <h5 class="card-title">Avg IV (30d)</h5>
+                        <p class="card-text display-4" id="avg-iv-30">58.2%</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                      <div class="card-body">
+                        <h5 class="card-title">Avg RV</h5>
+                        <p class="card-text display-4" id="avg-rv">23.7%</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                      <div class="card-body">
+                        <h5 class="card-title">IV-RV Spread</h5>
+                        <p class="card-text display-4" id="iv-rv-spread">
+                          34.5%
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="time-series" class="mb-5">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3>Time Series Analysis</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV vs RV Time Series</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/iv_vs_rv_timeseries.png"
+                            class="img-fluid"
+                            alt="IV vs RV Time Series"
+                          />
+                          <div
+                            id="interactive-iv-rv-timeseries"
+                            class="interactive-chart"
+                          ></div>
+                        </div>
+                        <div class="mt-3">
+                          <p>
+                            This chart shows the time series of Implied
+                            Volatility (IV) for different expiry periods (30d,
+                            60d, 90d) compared to Realized Volatility (RV). The
+                            IV values are typically higher than RV, indicating a
+                            volatility risk premium.
+                          </p>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="show-iv-30"
+                              checked
+                            />
+                            <label class="form-check-label" for="show-iv-30"
+                              >IV 30d</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="show-iv-60"
+                              checked
+                            />
+                            <label class="form-check-label" for="show-iv-60"
+                              >IV 60d</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="show-iv-90"
+                              checked
+                            />
+                            <label class="form-check-label" for="show-iv-90"
+                              >IV 90d</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="show-rv"
+                              checked
+                            />
+                            <label class="form-check-label" for="show-rv"
+                              >RV</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Call Option IV Comparison</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/ce_iv_comparison.png"
+                            class="img-fluid"
+                            alt="Call Option IV Comparison"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          Comparison of Call Option Implied Volatility for
+                          different expiry periods (30d, 60d, 90d).
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Put Option IV Comparison</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/pe_iv_comparison.png"
+                            class="img-fluid"
+                            alt="Put Option IV Comparison"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          Comparison of Put Option Implied Volatility for
+                          different expiry periods (30d, 60d, 90d).
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV-RV Spread Over Time</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/iv_rv_spread.png"
+                            class="img-fluid"
+                            alt="IV-RV Spread Over Time"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This chart shows the spread between Implied Volatility
+                          (30d) and Realized Volatility over time. Positive
+                          values indicate that IV is higher than RV, which is
+                          typically the case due to the volatility risk premium.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="term-structure" class="mb-5">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3>Term Structure Analysis</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Call Option IV Term Structure</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/ce_iv_term_structure.png"
+                            class="img-fluid"
+                            alt="Call Option IV Term Structure"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This chart shows the Call Option IV Term Structure on
+                          selected dates. The term structure typically slopes
+                          upward, with longer expiry options having higher IV.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Put Option IV Term Structure</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/pe_iv_term_structure.png"
+                            class="img-fluid"
+                            alt="Put Option IV Term Structure"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This chart shows the Put Option IV Term Structure on
+                          selected dates. The term structure typically slopes
+                          upward, with longer expiry options having higher IV.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Interactive Term Structure</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group mb-3">
+                          <label for="date-selector">Select Date:</label>
+                          <select class="form-control" id="date-selector">
+                            <option value="2020-04-15">2020-04-15</option>
+                            <option value="2020-04-20">2020-04-20</option>
+                            <option value="2020-04-25">2020-04-25</option>
+                            <option value="2020-04-30">2020-04-30</option>
+                          </select>
+                        </div>
+                        <div
+                          id="interactive-term-structure"
+                          class="interactive-chart"
+                        ></div>
+                        <p class="mt-3">
+                          This interactive chart allows you to select a specific
+                          date and view the IV term structure for both call and
+                          put options on that date.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="skew-analysis" class="mb-5">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3>Skew Analysis</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV Skew (CE - PE) for Different Expiry Periods</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/iv_skew.png"
+                            class="img-fluid"
+                            alt="IV Skew"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This chart shows the IV Skew (CE - PE) for different
+                          expiry periods (30d, 60d, 90d). Positive values
+                          indicate that call options have higher IV than put
+                          options, while negative values indicate the opposite.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV vs Underlying Price</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/iv_vs_price.png"
+                            class="img-fluid"
+                            alt="IV vs Underlying Price"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This scatter plot shows the relationship between
+                          Implied Volatility (30d) and the underlying price.
+                          There is often a negative correlation between IV and
+                          price, with IV increasing as price decreases.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV vs RV Scatter Plot</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/iv_vs_rv_scatter.png"
+                            class="img-fluid"
+                            alt="IV vs RV Scatter Plot"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This scatter plot shows the relationship between
+                          Implied Volatility (30d) and Realized Volatility.
+                          Points above the 45-degree line indicate that IV is
+                          higher than RV, which is typically the case due to the
+                          volatility risk premium.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="distributions" class="mb-5">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3>Distributions</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV 30d Percentile Distribution</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/iv_percentile_distribution.png"
+                            class="img-fluid"
+                            alt="IV Percentile Distribution"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This histogram shows the distribution of IV 30d
+                          percentiles for both call and put options. The
+                          percentile indicates where the current IV stands
+                          relative to its historical range.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV 30d Rank Distribution</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-container">
+                          <img
+                            src="analysis/plots/iv_rank_distribution.png"
+                            class="img-fluid"
+                            alt="IV Rank Distribution"
+                          />
+                        </div>
+                        <p class="mt-3">
+                          This histogram shows the distribution of IV 30d ranks
+                          for both call and put options. The rank is similar to
+                          the percentile but is calculated differently.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="verification" class="mb-5">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3>Verification Results</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>IV Verification</h4>
+                      </div>
+                      <div class="card-body">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>Check</th>
+                              <th>Result</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>IV Range Check</td>
+                              <td>
+                                <span class="badge bg-success">PASS</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>IV Term Structure Check</td>
+                              <td><span class="badge bg-danger">FAIL</span></td>
+                            </tr>
+                            <tr>
+                              <td>IV Variation Check</td>
+                              <td>
+                                <span class="badge bg-success">PASS</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="alert alert-warning">
+                          <strong>Anomaly:</strong> CE IV term structure
+                          violations: 379/1234
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>RV Verification</h4>
+                      </div>
+                      <div class="card-body">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>Check</th>
+                              <th>Result</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>RV Range Check</td>
+                              <td>
+                                <span class="badge bg-success">PASS</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>RV Variation Check</td>
+                              <td>
+                                <span class="badge bg-success">PASS</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>RV Presence Check</td>
+                              <td>
+                                <span class="badge bg-success">PASS</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-md-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4>Verification Summary</h4>
+                      </div>
+                      <div class="card-body">
+                        <p>
+                          The verification process checked the IV and RV
+                          calculations for validity and consistency. Most checks
+                          passed, with only the IV Term Structure Check showing
+                          anomalies.
+                        </p>
+                        <p>
+                          The IV Term Structure Check failure indicates that in
+                          379 out of 1234 instances (30.7%), the IV for shorter
+                          expiry options was higher than for longer expiry
+                          options. While this is not the typical pattern (longer
+                          expiry usually has higher IV), it can occur during
+                          periods of market stress or when there are specific
+                          events expected in the near term.
+                        </p>
+                        <p>
+                          All RV checks passed, indicating that the Realized
+                          Volatility calculations are valid and consistent.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5 flex gap-2">
+      <a class="text-white" href="https://sajaltech.com" >Powered by Sajal Tech Solutions Private Limited</a>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
