@@ -34,14 +34,14 @@ for date, values in hdfcbank_data['timestamps'].items():
             entry['ce_iv_30'] = values['ce'].get('iv_30')
             entry['ce_iv_60'] = values['ce'].get('iv_60')
             entry['ce_iv_90'] = values['ce'].get('iv_90')
-            entry['ce_iv_30d_percentile'] = values['ce'].get('iv_30d_percentile')
-            entry['ce_iv_30d_rank'] = values['ce'].get('iv_30d_rank')
+            entry['ce_iv_30d_percentile'] = values['ce'].get('ivp')
+            entry['ce_iv_30d_rank'] = values['ce'].get('ivr')
         if 'pe' in values:
             entry['pe_iv_30'] = values['pe'].get('iv_30')
             entry['pe_iv_60'] = values['pe'].get('iv_60')
             entry['pe_iv_90'] = values['pe'].get('iv_90')
-            entry['pe_iv_30d_percentile'] = values['pe'].get('iv_30d_percentile')
-            entry['pe_iv_30d_rank'] = values['pe'].get('iv_30d_rank')
+            entry['pe_iv_30d_percentile'] = values['pe'].get('ivp')
+            entry['pe_iv_30d_rank'] = values['pe'].get('ivr')
         extracted_data.append(entry)
 
 df = pd.DataFrame(extracted_data)
