@@ -130,7 +130,7 @@ def implied_volatility_bisection(
 def yang_zhang_volatility(ohlc_df, trading_periods=252):
     """
     Computes the Yang-Zhang volatility for a given set of daily OHLC data.
-    Typically you do this over a window (e.g. last 20 or 30 days).
+    Typically this is done over a window (e.g. last 20 or 30 days).
     ohlc_df columns required: 'Open', 'High', 'Low', 'Close'.
     trading_periods is the annualization factor (252 for trading days).
     """
@@ -176,34 +176,61 @@ def yang_zhang_volatility(ohlc_df, trading_periods=252):
     yz_vol = math.sqrt(yz_variance * trading_periods)
     return yz_vol
 
-def compute_yz_rolling_vol(df, window=20, trading_periods=252):
+def compute_yz_rolling_vol_with_extension(df, window=30, max_lookback=90, trading_periods=252):
     """
     Given a daily OHLC DataFrame (with columns Date,Open,High,Low,Close),
     compute a rolling Yang-Zhang realized vol over the specified window.
+    
+    This function extends the window backward until we have exactly 'window' valid data points,
+    or until we've looked back 'max_lookback' days, whichever comes first.
+    
+    If a day doesn't have data, we continue extending until we find enough valid data points.
+    
     Returns a pd.Series with the same date index, each row is the YZ vol
-    computed over the prior `window` days (including current day).
+    computed over the prior available days (including current day).
     """
     # Sort by date just in case
     df = df.sort_values('Date')
     df.set_index('Date', inplace=True)
     
-    # We'll define a rolling apply:
-    def yz_func(subdf):
-        return yang_zhang_volatility(subdf, trading_periods)
-    
-    # Rolling window apply
-    # If df is large, this can be slow. We can do a .rolling(window).apply(...) if we pass a function
-    # that can handle arrays. But we need O/H/L/C. We'll just do a group apply:
-    # Alternatively, use a custom approach or 'rolling' trick.
-    
-    # We'll do a simple approach using a loop:
+    # We'll do a simple approach using a loop with window extension:
     yz_values = []
     dates = df.index
+    
     for i in range(len(dates)):
-        # window from i-window+1 to i
-        start_idx = max(0, i - window + 1)
-        subdf = df.iloc[start_idx:(i+1)]
-        rv = yang_zhang_volatility(subdf, trading_periods)
+        current_date = dates[i]
+        
+        # Start with the standard window
+        valid_data_points = []
+        lookback_days = 0
+        
+        # Keep looking back until we have enough valid data points or reach max lookback
+        j = i
+        while len(valid_data_points) < window and j >= 0 and lookback_days < max_lookback:
+            # Check if this day has valid OHLC data
+            day_data = df.iloc[j]
+            
+            # Check if the data is valid (not NaN, not zero, etc.)
+            if (not pd.isna(day_data['Open']) and not pd.isna(day_data['High']) and 
+                not pd.isna(day_data['Low']) and not pd.isna(day_data['Close']) and
+                day_data['Open'] > 0 and day_data['High'] > 0 and 
+                day_data['Low'] > 0 and day_data['Close'] > 0):
+                valid_data_points.append(day_data)
+            
+            j -= 1
+            lookback_days += 1
+        
+        # Convert valid data points to a DataFrame
+        if len(valid_data_points) == window:
+            # We have exactly the right number of valid data points
+            valid_df = pd.DataFrame(valid_data_points)
+            # Reverse the order to be chronological
+            valid_df = valid_df.iloc[::-1]
+            rv = yang_zhang_volatility(valid_df, trading_periods)
+        else:
+            # Not enough valid data points even after extending
+            rv = float('nan')
+            
         yz_values.append(rv)
     
     result_series = pd.Series(yz_values, index=dates, name='YZ_Vol')
@@ -657,29 +684,47 @@ def main():
     # ----------------------------------------------------------------------
     # 6) AFTER LOADING: Compute Rolling Yang-Zhang Realized Vol for each symbol
     # ----------------------------------------------------------------------
-    # We'll do a 20-day rolling approach. Then store each day's yz in the result.
+    # We'll use our improved approach with window extension
     
-    window = 20  # or 30, or as desired
+    window = 30  # Target window size
+    max_lookback = 90  # Maximum days to look back
+    
+    # Debug counters
+    total_timestamps = 0
+    filled_rv_count = 0
+    
     for symbol in symbols:
         # Build a DF from the daily_ohlc_map
         rows = daily_ohlc_map[symbol]
         if not rows:
+            print(f"Symbol {symbol}: No OHLC data available")
             continue
+            
         ohlc_df = pd.DataFrame(rows)  # columns = Date,Open,High,Low,Close
-        # compute rolling yz
-        yz_series = compute_yz_rolling_vol(ohlc_df, window=window, trading_periods=252)
+        
+        # Log the amount of data available
+        print(f"Symbol {symbol}: {len(rows)} days of OHLC data available")
+        
+        # compute rolling yz with window extension
+        yz_series = compute_yz_rolling_vol_with_extension(ohlc_df, window=window, max_lookback=max_lookback, trading_periods=252)
         
         # yz_series is indexed by date. We'll match each date to the relevant date_str in result
+        symbol_filled = 0
         for date_idx, yz_val in yz_series.items():
             date_key = date_idx.strftime('%d-%b-%Y')
             if date_key in result["historical"]["scripts"][symbol]["timestamps"]:
+                total_timestamps += 1
                 if np.isfinite(yz_val):
                     result["historical"]["scripts"][symbol]["timestamps"][date_key]["rv_yz"] = yz_val * 100.0
+                    filled_rv_count += 1
+                    symbol_filled += 1
                 else:
                     # If YZ is NaN or inf, store None
                     result["historical"]["scripts"][symbol]["timestamps"][date_key]["rv_yz"] = None
-            # else no entry for that date => skip
-            
+        
+        print(f"Symbol {symbol}: Filled {symbol_filled} RV values out of {len(yz_series)} dates")
+    
+    print(f"Total: Filled {filled_rv_count} RV values out of {total_timestamps} timestamps")
     
     # ----------------------------------------------------------------------
     # 7) COMPUTE 30-DAY IV PERCENTILE & RANK FOR CE & PE
@@ -855,7 +900,9 @@ def main():
                     print(f"[EARNINGS] Failed to parse date for {item.get('trading_symbol')}: {e}")
 
         for symbol in symbols:
-
+            if symbol not in earnings_map:
+                continue
+                
             earnings_dates = earnings_map[symbol]
             earnings_dt_objs = sorted(earnings_dates)
 
@@ -884,11 +931,16 @@ def main():
     # 11) SUMMARY
     # ----------------------------------------------------------------------
     total_timestamps = 0
+    total_rv_values = 0
     for symbol in symbols:
         timestamps = len(result["historical"]["scripts"][symbol]["timestamps"])
+        rv_values = sum(1 for d in result["historical"]["scripts"][symbol]["timestamps"].values() if d.get("rv_yz") is not None)
         total_timestamps += timestamps
-        print(f"{symbol}: {timestamps} days of data")
-    print(f"Total: {total_timestamps} data points across {len(symbols)} symbols")
+        total_rv_values += rv_values
+        print(f"{symbol}: {rv_values}/{timestamps} days with RV data ({rv_values/timestamps*100:.1f}% coverage)")
+    
+    print(f"Total: {total_rv_values}/{total_timestamps} data points with RV values ({total_rv_values/total_timestamps*100:.1f}% coverage)")
+    print(f"Fixed {total_rv_values} out of {total_timestamps} RV values across {len(symbols)} symbols")
 
 if __name__ == "__main__":
     main()
