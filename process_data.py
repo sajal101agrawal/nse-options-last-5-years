@@ -274,6 +274,8 @@ def get_time_to_expiry_in_years(date_key, expiry_str):
     
     # Approx with days in a year:
     return days_to_expiry / 340.0
+    # return days_to_expiry / 252.0
+    
 
 def get_option_expiry(option_row):
     """Safely extract expiry date from option row"""
@@ -660,13 +662,15 @@ def main():
         # 7a) CE
         ce_rows = []
         for d_str, rec in time_map.items():
-            ce_iv_30 = rec["ce"]["iv_30"]
-            if ce_iv_30 is not None:
-                try:
-                    dt_obj = datetime.strptime(d_str, "%d-%b-%Y")
-                    ce_rows.append({"Date": dt_obj, "iv_30": ce_iv_30})
-                except:
-                    pass
+            if "ce" in rec and "iv_30" in rec["ce"]:
+                ce_iv_30 = rec["ce"]["iv_30"]
+                if ce_iv_30 is not None:
+                    try:
+                        dt_obj = datetime.strptime(d_str, "%d-%b-%Y")
+                        ce_rows.append({"Date": dt_obj, "iv_30": ce_iv_30})
+                    except:
+                        pass
+                    
         if ce_rows:
             df_ce = pd.DataFrame(ce_rows).dropna(subset=["iv_30"])
             df_ce.sort_values("Date", inplace=True)
@@ -685,13 +689,14 @@ def main():
         # 7b) PE
         pe_rows = []
         for d_str, rec in time_map.items():
-            pe_iv_30 = rec["pe"]["iv_30"]
-            if pe_iv_30 is not None:
-                try:
-                    dt_obj = datetime.strptime(d_str, "%d-%b-%Y")
-                    pe_rows.append({"Date": dt_obj, "iv_30": pe_iv_30})
-                except:
-                    pass
+            if "pe" in rec and "iv_30" in rec["pe"]:
+                pe_iv_30 = rec["pe"]["iv_30"]
+                if pe_iv_30 is not None:
+                    try:
+                        dt_obj = datetime.strptime(d_str, "%d-%b-%Y")
+                        pe_rows.append({"Date": dt_obj, "iv_30": pe_iv_30})
+                    except:
+                        pass
         if pe_rows:
             df_pe = pd.DataFrame(pe_rows).dropna(subset=["iv_30"])
             df_pe.sort_values("Date", inplace=True)
