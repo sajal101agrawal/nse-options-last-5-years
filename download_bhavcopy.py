@@ -24,7 +24,6 @@ os.makedirs(extracted_dir, exist_ok=True)
 # Calculate date range for past 5 years
 end_date = datetime.datetime.now()
 start_date = end_date - relativedelta(years=5)
-# start_date = end_date - relativedelta(months=12)
 
 # Format for NSE Bhavcopy URLs
 # Example: https://archives.nseindia.com/content/historical/DERIVATIVES/2020/APR/fo13APR2020bhav.csv.zip
