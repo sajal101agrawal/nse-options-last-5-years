@@ -1,11 +1,11 @@
 IV Verification Results:
 IV Range Check: PASS
-IV Term Structure Check: FAIL
+IV Term Structure Check: PASS
 IV Variation Check: PASS
-IV Anomalies:
-  - CE IV term structure violations: 379/1234
 
 RV Verification Results:
-RV Range Check: PASS
+RV Range Check: FAIL
 RV Variation Check: PASS
 RV Presence Check: PASS
+RV Anomalies:
+  - Found 679 invalid RV values

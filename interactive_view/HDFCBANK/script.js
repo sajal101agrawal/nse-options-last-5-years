@@ -59,7 +59,7 @@ function processData(csvData) {
         const avgIV90Value = (parseFloat(row.ce_iv_90) + parseFloat(row.pe_iv_90)) / 2;
         avgIV90.push(avgIV90Value || null);
         
-        const rvValue = parseFloat(row.rv_yz) * 100 || null;
+        const rvValue = parseFloat(row.rv_yz) || null;
         rvYZ.push(rvValue);
         
         ivRvSpread.push(avgIV30Value - rvValue || null);
