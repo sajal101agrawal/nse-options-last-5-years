@@ -1,0 +1,117 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: none;
+}
+
+.card-header {
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.chart-container {
+    position: relative;
+    height: auto;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.chart-container img {
+    max-width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.interactive-chart {
+    height: 400px;
+    width: 100%;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+footer {
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.2rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .interactive-chart {
+        height: 300px;
+    }
+}
+
+/* Custom styles for the dashboard cards */
+.bg-primary {
+    background-color: #3498db !important;
+}
+
+.bg-success {
+    background-color: #2ecc71 !important;
+}
+
+.bg-info {
+    background-color: #9b59b6 !important;
+}
+
+.bg-warning {
+    background-color: #e67e22 !important;
+}
+
+/* Hover effects for images */
+.chart-container img:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Active nav link styling */
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+    border-bottom: 2px solid white;
+}
+
+/* Form control styling */
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+}
+
+.text-white{
+    color: #ddd!important;
+}
