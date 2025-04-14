@@ -12,6 +12,54 @@ from bisect import bisect_right
 #                       BLACK-SCHOLES & IV CALCULATIONS                     #
 #############################################################################
 
+def black_scholes_greeks(S, K, T, r, sigma, is_call=True, q=0.0):
+    """
+    Computes Black-Scholes Greeks for an option.
+    Returns a dictionary of: delta, gamma, theta, vega, rho
+    """
+    if T <= 0:
+        return {"delta": 0.0, "gamma": 0.0, "theta": 0.0, "vega": 0.0, "rho": 0.0}
+
+    d1 = (math.log(S / K) + (r - q + 0.5 * sigma**2) * T) / (sigma * math.sqrt(T))
+    d2 = d1 - sigma * math.sqrt(T)
+
+    def phi(x): return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
+    def phi_pdf(x): return (1.0 / math.sqrt(2 * math.pi)) * math.exp(-0.5 * x**2)
+
+    e_neg_qT = math.exp(-q * T)
+    e_neg_rT = math.exp(-r * T)
+
+    # Delta
+    delta = e_neg_qT * phi(d1) if is_call else -e_neg_qT * phi(-d1)
+
+    # Gamma (same for calls and puts)
+    gamma = (e_neg_qT * phi_pdf(d1)) / (S * sigma * math.sqrt(T))
+
+    # Theta
+    theta_call = ((- (S * phi_pdf(d1) * sigma * e_neg_qT) / (2 * math.sqrt(T))
+                  - r * K * e_neg_rT * phi(d2)
+                  + q * S * e_neg_qT * phi(d1))) / 365.0
+    theta_put = ((- (S * phi_pdf(d1) * sigma * e_neg_qT) / (2 * math.sqrt(T))
+                 + r * K * e_neg_rT * phi(-d2)
+                 - q * S * e_neg_qT * phi(-d1))) / 365.0
+    theta = theta_call if is_call else theta_put
+
+    # Vega
+    vega = S * e_neg_qT * phi_pdf(d1) * math.sqrt(T) / 100  # per 1% change in vol
+
+    # Rho
+    rho_call = K * T * e_neg_rT * phi(d2) / 100
+    rho_put = -K * T * e_neg_rT * phi(-d2) / 100
+    rho = rho_call if is_call else rho_put
+
+    return {
+        "delta": delta,
+        "gamma": gamma,
+        "theta": theta,
+        "vega": vega,
+        "rho": rho
+    }
+
 def black_scholes_price(S, K, T, r, sigma, is_call=True, q=0.0):
     """
     Computes the theoretical option price using the Black-Scholes-Merton formula.
@@ -73,6 +121,7 @@ def implied_volatility_bisection(
             lower_bound = mid_vol
     
     return 0.5 * (lower_bound + upper_bound)
+
 
 #############################################################################
 #                  YANG-ZHANG REALIZED VOLATILITY (DAILY)                   #
@@ -561,6 +610,9 @@ def main():
                 ce_volume = int(options_data[options_data['OPTION_TYP'] == 'CE']['CONTRACTS'].sum())
                 pe_volume = int(options_data[options_data['OPTION_TYP'] == 'PE']['CONTRACTS'].sum())
 
+                greeks_ce_30 = black_scholes_greeks(float(spot_price), float(chosen_strike), T_30, r_decimal, ce_iv_30 / 100.0, is_call=True)
+                greeks_pe_30 = black_scholes_greeks(float(spot_price), float(chosen_strike), T_30, r_decimal, pe_iv_30 / 100.0, is_call=False)
+
 
                 # Merge data
                 result["historical"]["scripts"][symbol]["timestamps"][date_key].update({
@@ -579,6 +631,7 @@ def main():
                         "low": float(ce_row_30d['LOW']),
                         "ivp": None,
                         "ivr": None,
+                        "greeks": greeks_ce_30,
                     },
                     "pe": {
                         "iv_30": pe_iv_30,
@@ -593,6 +646,7 @@ def main():
                         "low": float(pe_row_30d['LOW']),
                         "ivp": None,
                         "ivr": None,
+                        "greeks": greeks_pe_30,
                     }
                 })
             
