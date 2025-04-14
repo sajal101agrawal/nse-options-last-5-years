@@ -144,10 +144,10 @@ def compute_yz_rolling_vol(df, window=20, trading_periods=252):
     
     # Rolling window apply
     # If df is large, this can be slow. We can do a .rolling(window).apply(...) if we pass a function
-    # that can handle arrays. But we need O/H/L/C. We'll just do a group apply for demonstration:
+    # that can handle arrays. But we need O/H/L/C. We'll just do a group apply:
     # Alternatively, use a custom approach or 'rolling' trick.
     
-    # We'll do a simple approach using a loop to illustrate:
+    # We'll do a simple approach using a loop:
     yz_values = []
     dates = df.index
     for i in range(len(dates)):
@@ -247,8 +247,6 @@ def pick_strike_nearest_underlying(underlying, options_data):
 
     return ce_30d, ce_60d, ce_90d, pe_30d, pe_60d, pe_90d, chosen_strike
 
-
-
 #############################################################################
 #                          TIME-TO-EXPIRY FUNCTION                          #
 #############################################################################
@@ -297,7 +295,7 @@ def main():
     
 
     # ----------------------------------------------------------------------
-    # 1) LOAD F&O SCRIPTS
+    # 0) LOAD F&O SCRIPTS
     # ----------------------------------------------------------------------
     with open(os.path.join(base_dir, 'nse_fno_scripts.json'), 'r') as f:
         fno_scripts = json.load(f)
@@ -308,7 +306,7 @@ def main():
     
     
     # ----------------------------------------------------------------------
-    #  LOAD UNDERLYING SPOT PRICES FROM YAHOO
+    # 1) LOAD UNDERLYING SPOT PRICES FROM YAHOO
     # ----------------------------------------------------------------------
     yahoo_dir = os.path.join(base_dir, "yahoo_finance")
     spot_price_map = {}
@@ -335,11 +333,12 @@ def main():
     bhavcopy_files = glob.glob(os.path.join(bhavcopy_dir, '*.csv'))
     print(f"Found {len(bhavcopy_files)} bhavcopy files to process")
 
+
     # ----------------------------------------------------------------------
     # 3) LOAD INTEREST RATES FROM CSV WITH FALLBACK
     # ----------------------------------------------------------------------
     interest_rates_csv = os.path.join(base_dir, "interest_rates", "ADJUSTED_MIFOR.csv")
-    # If your CSV has no extra lines, remove skiprows=2
+    # If CSV has no extra lines, remove skiprows=2
     ir_df = pd.read_csv(interest_rates_csv, skiprows=2)
     ir_df["Date_parsed"] = pd.to_datetime(ir_df["Date"], format="%d %b %Y", errors='coerce')
     
@@ -348,6 +347,7 @@ def main():
         # pick the first row for that date
         first_row = sub_df.iloc[0]
         daily_interest_map[dt.date()] = float(first_row["FBIL ADJUSTED MIFOR(%)"])
+
 
     # ----------------------------------------------------------------------
     # 4) SET UP RESULT STRUCTURE
@@ -381,9 +381,9 @@ def main():
             df = pd.read_csv(file_path)
 
             # We gather daily "Open,High,Low,Close" for each symbol from the FUT or from something else
-            # Typically you'd use FUT's open/high/low/close or the underlying's actual equity data
-            # For demonstration, let's take the nearest future's open/high/low/close as "daily" bars
-            # for the symbol. If you have separate equity data, you'd use that instead.
+            # Typically we'd use FUT's open/high/low/close or the underlying's actual equity data
+            # For now, let's take the nearest future's open/high/low/close as "daily" bars
+            # for the symbol. If we have separate equity data, we'd use that instead.
             
             for symbol in symbols:
                 symbol_data = df[df['SYMBOL'] == symbol].copy()
@@ -453,10 +453,7 @@ def main():
 
                 options_data['EXPIRY_DT'] = pd.to_datetime(
                     options_data['EXPIRY_DT'], format='%d-%b-%Y', errors='coerce'
-                )
-
-
-                eq_data = symbol_data[symbol_data['INSTRUMENT'] == 'EQ']                
+                )          
                     
                 chosen = pick_strike_nearest_underlying(spot_price, options_data)
                 # chosen = pick_strike_nearest_underlying(float(fut_row['CLOSE']), options_data)
@@ -543,7 +540,7 @@ def main():
                     is_call=False
                 ) * 100.0
 
-                # Volume => here we store 'CONTRACTS'. If you want total shares, multiply by lot size or use a different column
+                # Volume => here we store 'CONTRACTS'. If we want total shares, multiply by lot size or use a different column
                 ce_volume = int(options_data[options_data['OPTION_TYP'] == 'CE']['CONTRACTS'].sum())
                 pe_volume = int(options_data[options_data['OPTION_TYP'] == 'PE']['CONTRACTS'].sum())
 
@@ -585,10 +582,11 @@ def main():
         except Exception as e:
             print(f"Error processing {file_path}: {str(e)}")
 
+
     # ----------------------------------------------------------------------
     # 6) AFTER LOADING: Compute Rolling Yang-Zhang Realized Vol for each symbol
     # ----------------------------------------------------------------------
-    # We'll do a 20-day rolling approach, for example. Then store each day's yz in the result.
+    # We'll do a 20-day rolling approach. Then store each day's yz in the result.
     
     window = 20  # or 30, or as desired
     for symbol in symbols:
@@ -612,7 +610,7 @@ def main():
             # else no entry for that date => skip
             
     
-       # ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
     # 7) COMPUTE 30-DAY IV PERCENTILE & RANK FOR CE & PE
     # ----------------------------------------------------------------------
     def compute_rolling_iv_percentile_and_rank(iv_df, window_size=30):
@@ -681,7 +679,6 @@ def main():
                 d_str = dt_obj.strftime("%d-%b-%Y")
                 pctl = df_ce.loc[i, "iv_30d_percentile"]
                 rnk = df_ce.loc[i, "iv_30d_rank"]
-                # Convert percentile to % if desired
                 time_map[d_str]["ce"]["iv_30d_percentile"] = (pctl * 100.0) if pctl is not None else None
                 time_map[d_str]["ce"]["iv_30d_rank"] = rnk  # 0-1 scale
 
@@ -710,8 +707,10 @@ def main():
                 time_map[d_str]["pe"]["iv_30d_percentile"] = (pctl * 100.0) if pctl is not None else None
                 time_map[d_str]["pe"]["iv_30d_rank"] = rnk
                 
-                
-    # SORT TIMESTAMPS BY DATE AND REPLACE NaN/Inf => None
+       
+    # ----------------------------------------------------------------------
+    # 8) SORT TIMESTAMPS BY DATE AND REPLACE NaN/Inf => None
+    # ----------------------------------------------------------------------        
     for symbol in symbols:
         ts_map = result["historical"]["scripts"][symbol]["timestamps"]
         if not ts_map:
@@ -762,7 +761,7 @@ def main():
     
     
     # ----------------------------------------------------------------------
-    # ADD UPCOMING EARNINGS DATES FROM earnings_dates.json
+    # 9) ADD UPCOMING EARNINGS DATES FROM earnings_dates.json
     # ----------------------------------------------------------------------
 
     earnings_file = os.path.join(base_dir, "earning_dates", "earning_dates.json")
@@ -799,7 +798,7 @@ def main():
                     
                 
     # ----------------------------------------------------------------------
-    #  SAVE PROCESSED DATA
+    #  10) SAVE PROCESSED DATA
     # ----------------------------------------------------------------------
     output_file = os.path.join(processed_dir, 'processed_data.json')
     with open(output_file, 'w') as f:
@@ -808,7 +807,7 @@ def main():
     print(f"Processed data saved to {output_file}")
 
     # ----------------------------------------------------------------------
-    # 8) SUMMARY
+    # 11) SUMMARY
     # ----------------------------------------------------------------------
     total_timestamps = 0
     for symbol in symbols:

@@ -1,5 +1,5 @@
 """
-Script to extract and save NSE F&O scripts from the official NSE website
+Script to save NSE F&O scripts in json from the existing list of index futures and individual securities.
 """
 
 import json
