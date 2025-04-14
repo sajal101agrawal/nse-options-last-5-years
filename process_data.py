@@ -43,7 +43,7 @@ def black_scholes_price(S, K, T, r, sigma, is_call=True, q=0.0):
         return (K * e_neg_rT * phi(-d2)) - (S * e_neg_qT * phi(-d1))
 
 def implied_volatility_bisection(
-    market_price, S, K, T, r, is_call=True, q=0.0,
+    market_price, S, K, T, r, is_call=True, q=0.01,
     lower_bound=1e-9, upper_bound=5.0, tol=1e-8, max_iter=500
 ):
     """
@@ -166,21 +166,35 @@ def compute_yz_rolling_vol(df, window=20, trading_periods=252):
 
 def get_rate_with_fallback(date_obj, daily_interest_map):
     """
-    If an exact match for date_obj is not present, pick the nearest earlier date
-    in daily_interest_map. If date_obj is before the earliest known date, return None.
-    
-    daily_interest_map is {python_date: rate}.
+    Get the interest rate for the given date.
+    If not available, fallback to the nearest earlier date.
+    If no earlier date exists, fallback to the nearest later date.
     """
-    # Sort all available dates
+    
+    if date_obj in daily_interest_map:
+        return daily_interest_map[date_obj]
+
     all_dates = sorted(daily_interest_map.keys())
+
+    if not all_dates:
+        return 0.0  # Safe default fallback
+
+    # Find the nearest earlier date
     pos = bisect_right(all_dates, date_obj)
-    if pos == 0:
-        # date_obj < all_dates[0], no fallback
-        return None
-    else:
-        # Fallback date is all_dates[pos - 1]
-        fallback_date = all_dates[pos - 1]
-        return daily_interest_map[fallback_date]
+
+    # Try earlier
+    if pos > 0:
+        left_date = all_dates[pos - 1]
+        return daily_interest_map[left_date]
+
+    # Else try right
+    if pos < len(all_dates):
+        right_date = all_dates[pos]
+        return daily_interest_map[right_date]
+
+    # As absolute fallback (should never reach here)
+    return daily_interest_map[all_dates[0]]
+
 
 #############################################################################
 #                 PICK STRIKE NEAREST UNDERLYING (CE/PE)                    #
@@ -273,8 +287,8 @@ def get_time_to_expiry_in_years(date_key, expiry_str):
     days_to_expiry = max(0, days_to_expiry)  # clamp negative to zero
     
     # Approx with days in a year:
-    return days_to_expiry / 340.0
-    # return days_to_expiry / 252.0
+    # return days_to_expiry / 340.0
+    return days_to_expiry / 252.0
     
 
 def get_option_expiry(option_row):
@@ -480,7 +494,8 @@ def main():
                     # T = get_time_to_expiry_in_years(opt_expiry.strftime('%d-%b-%Y'))
                 
                 r_decimal = (fallback_rate / 100.0) if fallback_rate else 0.0
-                
+                if r_decimal != 0.0:
+                    r_decimal = r_decimal - 0.01  # Adjust for risk-free rate
                 
                 ce_30d_price = float(ce_row_30d['SETTLE_PR'])
                 ce_60d_price = float(ce_row_60d['SETTLE_PR'])
@@ -557,13 +572,13 @@ def main():
                         "iv_90": ce_iv_90,
                         # "open_interest": int(ce_row['OPEN_INT']),
                         "volume": ce_volume,
-                        "last_price": ce_30d_price,
+                        "last_price_30d": ce_30d_price,
                         "close": float(ce_row_30d['CLOSE']),
                         "open": float(ce_row_30d['OPEN']),
                         "high": float(ce_row_30d['HIGH']),
                         "low": float(ce_row_30d['LOW']),
-                        "iv_30d_percentile": None,
-                        "iv_30d_rank": None,
+                        "ivp": None,
+                        "ivr": None,
                     },
                     "pe": {
                         "iv_30": pe_iv_30,
@@ -571,13 +586,13 @@ def main():
                         "iv_90": pe_iv_90,
                         # "open_interest": int(pe_row['OPEN_INT']),
                         "volume": pe_volume,
-                        "last_price": pe_30d_price,
+                        "last_price_30d": pe_30d_price,
                         "close": float(pe_row_30d['CLOSE']),
                         "open": float(pe_row_30d['OPEN']),
                         "high": float(pe_row_30d['HIGH']),
                         "low": float(pe_row_30d['LOW']),
-                        "iv_30d_percentile": None,
-                        "iv_30d_rank": None,
+                        "ivp": None,
+                        "ivr": None,
                     }
                 })
             
@@ -648,8 +663,8 @@ def main():
             iv_30d_percentiles.append(percentile)
             iv_30d_ranks.append(rank)
         
-        iv_df['iv_30d_percentile'] = iv_30d_percentiles
-        iv_df['iv_30d_rank'] = iv_30d_ranks
+        iv_df['ivp'] = iv_30d_percentiles
+        iv_df['ivr'] = iv_30d_ranks
         return iv_df
 
     # For each symbol, build separate time-series for CE and PE iv_30,
@@ -681,10 +696,10 @@ def main():
             for i in range(len(df_ce)):
                 dt_obj = df_ce.loc[i, "Date"]
                 d_str = dt_obj.strftime("%d-%b-%Y")
-                pctl = df_ce.loc[i, "iv_30d_percentile"]
-                rnk = df_ce.loc[i, "iv_30d_rank"]
-                time_map[d_str]["ce"]["iv_30d_percentile"] = (pctl * 100.0) if pctl is not None else None
-                time_map[d_str]["ce"]["iv_30d_rank"] = rnk  # 0-1 scale
+                pctl = df_ce.loc[i, "ivp"]
+                rnk = df_ce.loc[i, "ivr"]
+                time_map[d_str]["ce"]["ivp"] = (pctl * 100.0) if pctl is not None else None
+                time_map[d_str]["ce"]["ivr"] = rnk  # 0-1 scale
 
         # 7b) PE
         pe_rows = []
@@ -707,10 +722,10 @@ def main():
             for i in range(len(df_pe)):
                 dt_obj = df_pe.loc[i, "Date"]
                 d_str = dt_obj.strftime("%d-%b-%Y")
-                pctl = df_pe.loc[i, "iv_30d_percentile"]
-                rnk = df_pe.loc[i, "iv_30d_rank"]
-                time_map[d_str]["pe"]["iv_30d_percentile"] = (pctl * 100.0) if pctl is not None else None
-                time_map[d_str]["pe"]["iv_30d_rank"] = rnk
+                pctl = df_pe.loc[i, "ivp"]
+                rnk = df_pe.loc[i, "ivr"]
+                time_map[d_str]["pe"]["ivp"] = (pctl * 100.0) if pctl is not None else None
+                time_map[d_str]["pe"]["ivr"] = rnk
                 
        
     # ----------------------------------------------------------------------
