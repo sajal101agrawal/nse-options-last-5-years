@@ -91,7 +91,7 @@ def black_scholes_price(S, K, T, r, sigma, is_call=True, q=0.0):
         return (K * e_neg_rT * phi(-d2)) - (S * e_neg_qT * phi(-d1))
 
 def implied_volatility_bisection(
-    market_price, S, K, T, r, is_call=True, q=0.01,
+    market_price, S, K, T, r, is_call=True, q=0.0,
     lower_bound=1e-9, upper_bound=5.0, tol=1e-8, max_iter=500
 ):
     """
@@ -283,6 +283,8 @@ def pick_strike_nearest_underlying(underlying, options_data):
         pe_row_30d, pe_row_60d, pe_row_90d,
         chosen_strike
     """
+    
+    
     candidates = []
 
     # Ensure datetime format
@@ -329,10 +331,13 @@ def pick_strike_nearest_underlying(underlying, options_data):
         return None
 
     # Sort by closest to underlying
-    candidates.sort(key=lambda x: x[0])
+    # candidates.sort(key=lambda x: x[0])
+    candidates.sort(key=lambda x: (x[0], x[1]))
+
     _, chosen_strike, ce_30d, pe_30d, ce_60d, pe_60d, ce_90d, pe_90d = candidates[0]
 
     return ce_30d, ce_60d, ce_90d, pe_30d, pe_60d, pe_90d, chosen_strike
+
 
 #############################################################################
 #                          TIME-TO-EXPIRY FUNCTION                          #
@@ -361,7 +366,9 @@ def get_time_to_expiry_in_years(date_key, expiry_str):
     
     # Approx with days in a year:
     # return days_to_expiry / 340.0
-    return days_to_expiry / 252.0
+    # return days_to_expiry / 252.0
+    return days_to_expiry / 365.0
+    
     
 
 def get_option_expiry(option_row):
@@ -568,8 +575,13 @@ def main():
                 
                 r_decimal = (fallback_rate / 100.0) if fallback_rate else 0.0
                 if r_decimal != 0.0:
-                    r_decimal = r_decimal - 0.01  # Adjust for risk-free rate
-                
+                    r_decimal = r_decimal
+                    
+                    
+                # ---------- TEMPORARILY FLAT 10% INTEREST RATE ---------------
+                # r_decimal = 0.10
+                # ---------- ---------------------------------- ---------------
+
                 ce_30d_price = float(ce_row_30d['SETTLE_PR'])
                 ce_60d_price = float(ce_row_60d['SETTLE_PR'])
                 ce_90d_price = float(ce_row_90d['SETTLE_PR'])
@@ -585,6 +597,7 @@ def main():
                     r=r_decimal,
                     is_call=True
                 ) * 100.0
+                
                 pe_iv_30 = implied_volatility_bisection(
                     market_price=pe_30d_price,
                     S=float(spot_price),
