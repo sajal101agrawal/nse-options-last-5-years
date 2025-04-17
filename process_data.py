@@ -781,7 +781,7 @@ def main():
             iv_30d_ranks.append(rank)
         
         iv_df['ivp'] = iv_30d_percentiles
-        iv_df['ivr'] = iv_30d_ranks
+        iv_df['ivr'] = iv_30d_ranks 
         return iv_df
 
     # For each symbol, build separate time-series for CE and PE iv_30,
@@ -816,7 +816,7 @@ def main():
                 pctl = df_ce.loc[i, "ivp"]
                 rnk = df_ce.loc[i, "ivr"]
                 time_map[d_str]["ce"]["ivp"] = (pctl * 100.0) if pctl is not None else None
-                time_map[d_str]["ce"]["ivr"] = rnk  # 0-1 scale
+                time_map[d_str]["ce"]["ivr"] = rnk * 100.0
 
         # 7b) PE
         pe_rows = []
@@ -842,7 +842,7 @@ def main():
                 pctl = df_pe.loc[i, "ivp"]
                 rnk = df_pe.loc[i, "ivr"]
                 time_map[d_str]["pe"]["ivp"] = (pctl * 100.0) if pctl is not None else None
-                time_map[d_str]["pe"]["ivr"] = rnk
+                time_map[d_str]["pe"]["ivr"] = rnk * 100.0
                 
        
     # ----------------------------------------------------------------------
