@@ -488,7 +488,7 @@ def main():
 
                 # ---------- FUT data for daily OHLC ----------
                 futures_data = symbol_data[
-                    symbol_data['INSTRUMENT'].isin(['FUTSTK','FUTIDX'])
+                    symbol_data['INSTRUMENT'].isin(['FUTSTK','FUTIDX','OPTSTK','OPTIDX'])
                 ].copy()
                 if futures_data.empty:
                     continue
@@ -528,6 +528,8 @@ def main():
                         "expiry_60d": None,
                         "expiry_90d": None
                     }
+                    
+   
 
                 # Gather all future expiries for the day => store up to 3
                 all_fut_expiries = futures_data['EXPIRY_DT'].dropna().unique()
@@ -549,7 +551,50 @@ def main():
 
                 options_data['EXPIRY_DT'] = pd.to_datetime(
                     options_data['EXPIRY_DT'], format='%d-%b-%Y', errors='coerce'
-                )          
+                )
+                
+                # OPTION‑CHAIN SNAPSHOT --------------------------------------------
+                chain_rows = []
+                for _, row in options_data.iterrows():
+                    if row['INSTRUMENT'] in ['OPTSTK','OPTIDX'] and row['SYMBOL'] == symbol:
+                        try:
+                            expiry_str = pd.to_datetime(row["EXPIRY_DT"]).strftime("%d-%b-%Y")
+                            T_row = get_time_to_expiry_in_years(date_key, expiry_str)
+                            iv_row = implied_volatility_bisection(
+                                market_price=float(row["SETTLE_PR"]),
+                                S=float(spot_price),
+                                K=float(row["STRIKE_PR"]),
+                                T=T_row,
+                                r=r_decimal,
+                                is_call=(row["OPTION_TYP"] == "CE"),
+                            )
+                            delta_row = black_scholes_greeks(
+                                float(spot_price),
+                                float(row["STRIKE_PR"]),
+                                T_row,
+                                r_decimal,
+                                iv_row,
+                                is_call=(row["OPTION_TYP"] == "CE"),
+                            )["delta"]
+                            chain_rows.append(
+                                {
+                                    "expiry": expiry_str,
+                                    "strike": float(row["STRIKE_PR"]),
+                                    "type": row["OPTION_TYP"],
+                                    "settle": float(row["SETTLE_PR"]),
+                                    "open": float(row["OPEN"]),
+                                    "high": float(row["HIGH"]),
+                                    "low":  float(row["LOW"]),
+                                    "close":float(row["CLOSE"]),
+                                    "volume": int(row["CONTRACTS"]),
+                                    "iv": iv_row * 100.0 if iv_row else 0.0,
+                                    "delta": delta_row,
+                                }
+                            )
+                        except Exception:
+                            pass  # skip malformed rows
+
+                result["historical"]["scripts"][symbol]["timestamps"][date_key]["option_chain"] = chain_rows          
                     
                 chosen = pick_strike_nearest_underlying(spot_price, options_data)
                 # chosen = pick_strike_nearest_underlying(float(fut_row['CLOSE']), options_data)
@@ -657,7 +702,7 @@ def main():
                 else:
                     greeks_pe_30 = {"delta": 0.0, "gamma": 0.0, "theta": 0.0, "vega": 0.0, "rho": 0.0}
 
-
+                
 
                 # Merge data
                 result["historical"]["scripts"][symbol]["timestamps"][date_key].update({
@@ -733,7 +778,7 @@ def main():
             if date_key in result["historical"]["scripts"][symbol]["timestamps"]:
                 total_timestamps += 1
                 if np.isfinite(yz_val):
-                    result["historical"]["scripts"][symbol]["timestamps"][date_key]["rv_yz"] = yz_val * 100.0
+                    result["historical"]["scripts"][symbol]["timestamps"][date_key]["rv_yz"] = yz_val
                     filled_rv_count += 1
                     symbol_filled += 1
                 else:
@@ -761,7 +806,7 @@ def main():
             start = max(0, i - window_size + 1)
             sub = vals[start:(i+1)]
             current_val = vals[i]
-            if len(sub) == 0 or not np.isfinite(current_val):
+            if len(sub) == 0 or not np.isfinite(current_val) and current_val >= 0:
                 iv_30d_percentiles.append(None)
                 iv_30d_ranks.append(None)
                 continue
