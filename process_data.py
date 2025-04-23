@@ -283,7 +283,8 @@ def pick_strike_nearest_underlying(underlying, options_data):
         pe_row_30d, pe_row_60d, pe_row_90d,
         chosen_strike
     """
-    
+    if underlying is None or not np.isfinite(underlying): #if underlying is None or not np.isfinite(underlying):
+        return None
     
     candidates = []
 
@@ -518,6 +519,8 @@ def main():
                 
                 spot_price = spot_price_map.get(symbol, {}).get(date_key, None)
                 
+                if spot_price is None or not np.isfinite(spot_price):
+                    continue        
                 
                 if date_key not in result["historical"]["scripts"][symbol]["timestamps"]:
                     result["historical"]["scripts"][symbol]["timestamps"][date_key] = {
@@ -1036,19 +1039,6 @@ def main():
     print(f"Processed data saved to {output_file}")
 
     # ----------------------------------------------------------------------
-    # 11) SUMMARY
-    # ----------------------------------------------------------------------
-    total_timestamps = 0
-    total_rv_values = 0
-    for symbol in symbols:
-        timestamps = len(result["historical"]["scripts"][symbol]["timestamps"])
-        rv_values = sum(1 for d in result["historical"]["scripts"][symbol]["timestamps"].values() if d.get("rv_yz") is not None)
-        total_timestamps += timestamps
-        total_rv_values += rv_values
-        print(f"{symbol}: {rv_values}/{timestamps} days with RV data ({rv_values/timestamps*100:.1f}% coverage)")
-    
-    print(f"Total: {total_rv_values}/{total_timestamps} data points with RV values ({total_rv_values/total_timestamps*100:.1f}% coverage)")
-    print(f"Fixed {total_rv_values} out of {total_timestamps} RV values across {len(symbols)} symbols")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,258 @@
+#!/usr/bin/env python3
+# process_and_store.py  – NSE option-metrics ETL                © Sajal Tech 2025
+# ──────────────────────────────────────────────────────────────────────────────
+import os, sys, json, math, glob
+from datetime import datetime
+from bisect import bisect_right
+from pathlib import Path
+
+import pandas as pd
+import numpy as np
+import pytz
+
+from db_util import DBWriter
+
+# ── project-local imports ────────────────────────────────────────────────────
+sys.path.append(str(Path(__file__).resolve().parents[1]))      # add project root
+
+from process_data import (                                     # noqa: E402
+    black_scholes_greeks,
+    black_scholes_price,
+    implied_volatility_bisection,
+    yang_zhang_volatility,
+    compute_yz_rolling_vol,
+    get_rate_with_fallback,
+    pick_strike_nearest_underlying,
+    get_time_to_expiry_in_years,
+)
+
+# ── constants ────────────────────────────────────────────────────────────────
+WINDOW       = 30     # trading days in rolling Yang-Zhang window
+MAX_LOOKBACK = 90     # calendar-days we inspect to find 30 valid bars
+
+# ─────────────────────────────────────────────────────────────────────────────
+def _safe_T(date_key, expiry_str):
+    return get_time_to_expiry_in_years(date_key, expiry_str) if expiry_str else 0.0
+
+
+def _load_bhavcopy(path: Path) -> pd.DataFrame:
+    """Read an NSE bhav-copy CSV, retrying with skiprows=2 if metadata present."""
+    df0 = pd.read_csv(path)
+    if "SYMBOL" in df0.columns:
+        return df0
+    df1 = pd.read_csv(path, skiprows=2)
+    if "SYMBOL" in df1.columns:
+        return df1
+    raise ValueError(f"'SYMBOL' column not found in {path.name}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+def main():
+    db_writer = DBWriter()
+
+    SCRIPT_DIR = Path(__file__).resolve().parent
+    ROOT_DIR   = SCRIPT_DIR.parent
+
+    bhavcopy_dir = ROOT_DIR / "bhavcopy" / "extracted"
+    interest_csv = ROOT_DIR / "interest_rates" / "ADJUSTED_MIFOR.csv"
+    yahoo_dir    = ROOT_DIR / "yahoo_finance"
+
+    # ── symbol list ─────────────────────────────────────────────────────────
+    with open(ROOT_DIR / "nse_fno_scripts.json") as f:
+        fno = json.load(f)
+    symbols = [
+        x["symbol"]
+        for g in ("index_futures", "individual_securities")
+        for x in fno[g]
+    ]
+
+    # ── spot-price cache (Yahoo) ────────────────────────────────────────────
+    spot_price_map = {}
+    for sym in symbols:
+        fp = yahoo_dir / f"{sym}_processed.json"
+        if not fp.exists():
+            continue
+        with fp.open() as fh:
+            data = json.load(fh)
+        ts = data["historical"]["scripts"][sym]["timestamps"]
+        spot_price_map[sym] = {d: v["underlying_price"] for d, v in ts.items()}
+
+    # ── daily interest-rate map ─────────────────────────────────────────────
+    ir_df = pd.read_csv(interest_csv, skiprows=2)
+    ir_df["Date_parsed"] = pd.to_datetime(
+        ir_df["Date"], format="%d %b %Y", errors="coerce"
+    )
+    ir_map = {
+        idx.date(): float(row["FBIL ADJUSTED MIFOR(%)"])
+        for idx, row in ir_df.groupby("Date_parsed").first().iterrows()
+    }
+
+    # ── OHLC holder for RV calc ─────────────────────────────────────────────
+    daily_ohlc = {s: [] for s in symbols}
+
+    # ── iterate bhav-copy files ────────────────────────────────────────────
+    for csv_file in sorted(bhavcopy_dir.glob("*.csv")):
+        filename  = csv_file.name
+        date_obj  = datetime.strptime(filename[2:-8], "%d%b%Y")
+        date_key  = date_obj.strftime("%d-%b-%Y")
+        r_decimal = get_rate_with_fallback(date_obj.date(), ir_map) / 100.0
+
+        df = _load_bhavcopy(csv_file)
+        print(f"Processing {filename}")
+
+        for sym in symbols:
+            sym_df = df[df["SYMBOL"] == sym]
+            if sym_df.empty:
+                continue
+
+            # ── FUT OHLC (nearest expiry) ────────────────────────────────
+            fut = sym_df[sym_df["INSTRUMENT"].isin(["FUTSTK", "FUTIDX"])].copy()
+            if fut.empty:
+                continue
+            fut["EXPIRY_DT"] = pd.to_datetime(
+                fut["EXPIRY_DT"], errors="coerce"
+            ).fillna(datetime(2100, 1, 1))
+            fut_row = fut.sort_values("EXPIRY_DT").iloc[0]
+
+            # store bar for RV
+            daily_ohlc[sym].append(
+                {
+                    "Date":  date_obj,
+                    "Open":  float(fut_row["OPEN"]),
+                    "High":  float(fut_row["HIGH"]),
+                    "Low":   float(fut_row["LOW"]),
+                    "Close": float(fut_row["CLOSE"]),
+                }
+            )
+
+            # ── inline Yang-Zhang RV for today ───────────────────────────
+            rv_yz_today = None
+            rows = daily_ohlc[sym]
+            if len(rows) >= WINDOW:
+                df_tmp = pd.DataFrame(rows[-MAX_LOOKBACK:])
+                yz = compute_yz_rolling_vol(
+                    df_tmp,
+                    window=WINDOW,
+                    max_lookback=MAX_LOOKBACK,
+                    trading_periods=252,
+                )
+                if not yz.empty and np.isfinite(yz.iloc[-1]):
+                    rv_yz_today = float(yz.iloc[-1])
+
+            # ── spot price (Yahoo → futures close fallback) ──────────────
+            spot = spot_price_map.get(sym, {}).get(date_key)
+            if spot is None or not np.isfinite(spot):
+                spot = float(fut_row["CLOSE"])
+
+            # ── base payload ─────────────────────────────────────────────
+            payload = {
+                "underlying_price": spot,
+                "interest_rate":    r_decimal * 100,
+                "expiry_30d": None,
+                "expiry_60d": None,
+                "expiry_90d": None,
+                "rv_yz": rv_yz_today,
+                "strike_price": None,
+            }
+
+            # expiries
+            all_exp = sorted(fut["EXPIRY_DT"].dropna().unique())
+            if len(all_exp) > 0:
+                payload["expiry_30d"] = all_exp[0].strftime("%d-%b-%Y")
+            if len(all_exp) > 1:
+                payload["expiry_60d"] = all_exp[1].strftime("%d-%b-%Y")
+            if len(all_exp) > 2:
+                payload["expiry_90d"] = all_exp[2].strftime("%d-%b-%Y")
+
+            # ── full option-chain snapshot ───────────────────────────────
+            opts = sym_df[sym_df["INSTRUMENT"].isin(["OPTSTK", "OPTIDX"])].copy()
+            opts["EXPIRY_DT"] = pd.to_datetime(opts["EXPIRY_DT"], errors="coerce")
+
+            chain = []
+            for _, row in opts.iterrows():
+                try:
+                    exp = row["EXPIRY_DT"].strftime("%d-%b-%Y")
+                    T   = get_time_to_expiry_in_years(date_key, exp)
+                    iv  = implied_volatility_bisection(
+                        float(row["SETTLE_PR"]),
+                        spot,
+                        float(row["STRIKE_PR"]),
+                        T,
+                        r_decimal,
+                        is_call=row["OPTION_TYP"] == "CE",
+                    )
+                    delta = black_scholes_greeks(
+                        spot,
+                        float(row["STRIKE_PR"]),
+                        T,
+                        r_decimal,
+                        iv,
+                        is_call=row["OPTION_TYP"] == "CE",
+                    )["delta"]
+                    chain.append(
+                        {
+                            "expiry": exp,
+                            "strike": float(row["STRIKE_PR"]),
+                            "type":   row["OPTION_TYP"],
+                            "settle": float(row["SETTLE_PR"]),
+                            "iv":     iv * 100 if iv else 0,
+                            "delta":  delta,
+                            "volume": int(row["CONTRACTS"]),
+                        }
+                    )
+                except Exception:
+                    pass
+            payload["option_chain"] = chain
+
+            # ── nearest strike for IV30/60/90 ───────────────────────────
+            nearest = pick_strike_nearest_underlying(spot, opts)
+            if nearest:
+                
+                
+                
+                ce30, ce60, ce90, pe30, pe60, pe90, strike = nearest
+
+                # skip if any leg missing
+                if any(x is None for x in (ce30, ce60, ce90, pe30, pe60, pe90)):
+                    continue
+
+                payload["strike_price"] = strike
+
+                def _iv(premium, T, call=True):
+                    return (
+                        implied_volatility_bisection(
+                            premium, spot, strike, T, r_decimal, is_call=call
+                        )
+                        * 100
+                    )
+
+                T30 = _safe_T(date_key, payload["expiry_30d"])
+                T60 = _safe_T(date_key, payload["expiry_60d"])
+                T90 = _safe_T(date_key, payload["expiry_90d"])
+
+                payload["ce"] = {
+                    "iv_30": _iv(float(ce30["SETTLE_PR"]), T30, True),
+                    "iv_60": _iv(float(ce60["SETTLE_PR"]), T60, True),
+                    "iv_90": _iv(float(ce90["SETTLE_PR"]), T90, True),
+                    "volume": int(opts[opts["OPTION_TYP"] == "CE"]["CONTRACTS"].sum()),
+                }
+                payload["pe"] = {
+                    "iv_30": _iv(float(pe30["SETTLE_PR"]), T30, False),
+                    "iv_60": _iv(float(pe60["SETTLE_PR"]), T60, False),
+                    "iv_90": _iv(float(pe90["SETTLE_PR"]), T90, False),
+                    "volume": int(opts[opts["OPTION_TYP"] == "PE"]["CONTRACTS"].sum()),
+                }
+
+            # extras
+            payload["extras"] = {"source_file": filename}
+
+            # ── one-shot write to Postgres ───────────────────────────────
+            db_writer.write_row(sym, date_key, payload)
+
+    # ── flush last batch ──────────────────────────────────────────────────
+    db_writer.close()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    main()

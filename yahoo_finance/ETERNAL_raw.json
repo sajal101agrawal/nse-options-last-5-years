@@ -1,0 +1,134 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "symbol": "ETERNAL.NS",
+          "exchangeName": "NSI",
+          "fullExchangeName": "NSE",
+          "instrumentType": "EQUITY",
+          "firstTradeDate": 1743997500,
+          "regularMarketTime": 1744884000,
+          "hasPrePostMarketData": false,
+          "gmtoffset": 19800,
+          "timezone": "IST",
+          "exchangeTimezoneName": "Asia/Kolkata",
+          "regularMarketPrice": 231.6,
+          "fiftyTwoWeekHigh": 236.14,
+          "fiftyTwoWeekLow": 194.8,
+          "regularMarketDayHigh": 236.14,
+          "regularMarketDayLow": 220.38,
+          "regularMarketVolume": 70109092,
+          "longName": "Eternal Limited",
+          "shortName": "ETERNAL LIMITED",
+          "chartPreviousClose": 209.63,
+          "priceHint": 2,
+          "currentTradingPeriod": {
+            "pre": {
+              "timezone": "IST",
+              "start": 1744861500,
+              "end": 1744861500,
+              "gmtoffset": 19800
+            },
+            "regular": {
+              "timezone": "IST",
+              "start": 1744861500,
+              "end": 1744884000,
+              "gmtoffset": 19800
+            },
+            "post": {
+              "timezone": "IST",
+              "start": 1744884000,
+              "end": 1744884000,
+              "gmtoffset": 19800
+            }
+          },
+          "dataGranularity": "1d",
+          "range": "",
+          "validRanges": [
+            "1d",
+            "5d",
+            "1mo",
+            "ytd",
+            "max"
+          ]
+        },
+        "timestamp": [
+          1743997500,
+          1744083900,
+          1744170300,
+          1744343100,
+          1744688700,
+          1744775100,
+          1744861500
+        ],
+        "indicators": {
+          "quote": [
+            {
+              "low": [
+                194.8000030517578,
+                210.80999755859375,
+                209.86000061035156,
+                214.10000610351562,
+                220.10000610351562,
+                218.39999389648438,
+                220.3800048828125
+              ],
+              "close": [
+                209.6300048828125,
+                215.19000244140625,
+                211.38999938964844,
+                217.1999969482422,
+                222.22999572753906,
+                222.0800018310547,
+                231.60000610351562
+              ],
+              "open": [
+                196.0,
+                213.19000244140625,
+                216.0,
+                216.0,
+                224.25,
+                220.50999450683594,
+                220.60000610351562
+              ],
+              "high": [
+                211.0,
+                219.19000244140625,
+                216.0,
+                218.30999755859375,
+                224.25,
+                222.63999938964844,
+                236.13999938964844
+              ],
+              "volume": [
+                64932920,
+                62002510,
+                253599310,
+                28917540,
+                45034490,
+                26155870,
+                70125930
+              ]
+            }
+          ],
+          "adjclose": [
+            {
+              "adjclose": [
+                209.6300048828125,
+                215.19000244140625,
+                211.38999938964844,
+                217.1999969482422,
+                222.22999572753906,
+                222.0800018310547,
+                231.60000610351562
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

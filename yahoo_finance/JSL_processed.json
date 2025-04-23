@@ -1,0 +1,3726 @@
+{
+  "historical": {
+    "scripts": {
+      "JSL": {
+        "exchange": "NSE",
+        "segment": "Equity",
+        "timestamps": {
+          "21-Apr-2020": {
+            "underlying_price": 28.549999237060547
+          },
+          "22-Apr-2020": {
+            "underlying_price": 28.549999237060547
+          },
+          "23-Apr-2020": {
+            "underlying_price": 28.950000762939453
+          },
+          "24-Apr-2020": {
+            "underlying_price": 28.549999237060547
+          },
+          "27-Apr-2020": {
+            "underlying_price": 29.75
+          },
+          "28-Apr-2020": {
+            "underlying_price": 30.350000381469727
+          },
+          "29-Apr-2020": {
+            "underlying_price": 31.0
+          },
+          "30-Apr-2020": {
+            "underlying_price": 31.200000762939453
+          },
+          "04-May-2020": {
+            "underlying_price": 28.850000381469727
+          },
+          "05-May-2020": {
+            "underlying_price": 28.649999618530273
+          },
+          "06-May-2020": {
+            "underlying_price": 28.899999618530273
+          },
+          "07-May-2020": {
+            "underlying_price": 28.700000762939453
+          },
+          "08-May-2020": {
+            "underlying_price": 28.5
+          },
+          "11-May-2020": {
+            "underlying_price": 28.5
+          },
+          "12-May-2020": {
+            "underlying_price": 28.299999237060547
+          },
+          "13-May-2020": {
+            "underlying_price": 29.049999237060547
+          },
+          "14-May-2020": {
+            "underlying_price": 28.799999237060547
+          },
+          "15-May-2020": {
+            "underlying_price": 28.75
+          },
+          "18-May-2020": {
+            "underlying_price": 27.25
+          },
+          "19-May-2020": {
+            "underlying_price": 26.549999237060547
+          },
+          "20-May-2020": {
+            "underlying_price": 26.549999237060547
+          },
+          "21-May-2020": {
+            "underlying_price": 26.799999237060547
+          },
+          "22-May-2020": {
+            "underlying_price": 26.799999237060547
+          },
+          "26-May-2020": {
+            "underlying_price": 26.799999237060547
+          },
+          "27-May-2020": {
+            "underlying_price": 26.75
+          },
+          "28-May-2020": {
+            "underlying_price": 26.600000381469727
+          },
+          "29-May-2020": {
+            "underlying_price": 27.0
+          },
+          "01-Jun-2020": {
+            "underlying_price": 30.5
+          },
+          "02-Jun-2020": {
+            "underlying_price": 30.149999618530273
+          },
+          "03-Jun-2020": {
+            "underlying_price": 31.450000762939453
+          },
+          "04-Jun-2020": {
+            "underlying_price": 32.75
+          },
+          "05-Jun-2020": {
+            "underlying_price": 36.599998474121094
+          },
+          "08-Jun-2020": {
+            "underlying_price": 34.650001525878906
+          },
+          "09-Jun-2020": {
+            "underlying_price": 34.099998474121094
+          },
+          "10-Jun-2020": {
+            "underlying_price": 32.400001525878906
+          },
+          "11-Jun-2020": {
+            "underlying_price": 32.95000076293945
+          },
+          "12-Jun-2020": {
+            "underlying_price": 33.0
+          },
+          "15-Jun-2020": {
+            "underlying_price": 32.150001525878906
+          },
+          "16-Jun-2020": {
+            "underlying_price": 33.900001525878906
+          },
+          "17-Jun-2020": {
+            "underlying_price": 33.45000076293945
+          },
+          "18-Jun-2020": {
+            "underlying_price": 36.29999923706055
+          },
+          "19-Jun-2020": {
+            "underlying_price": 39.099998474121094
+          },
+          "22-Jun-2020": {
+            "underlying_price": 37.79999923706055
+          },
+          "23-Jun-2020": {
+            "underlying_price": 38.5
+          },
+          "24-Jun-2020": {
+            "underlying_price": 37.849998474121094
+          },
+          "25-Jun-2020": {
+            "underlying_price": 37.349998474121094
+          },
+          "26-Jun-2020": {
+            "underlying_price": 37.400001525878906
+          },
+          "29-Jun-2020": {
+            "underlying_price": 39.75
+          },
+          "30-Jun-2020": {
+            "underlying_price": 40.599998474121094
+          },
+          "01-Jul-2020": {
+            "underlying_price": 39.5
+          },
+          "02-Jul-2020": {
+            "underlying_price": 41.04999923706055
+          },
+          "03-Jul-2020": {
+            "underlying_price": 40.349998474121094
+          },
+          "06-Jul-2020": {
+            "underlying_price": 40.349998474121094
+          },
+          "07-Jul-2020": {
+            "underlying_price": 40.45000076293945
+          },
+          "08-Jul-2020": {
+            "underlying_price": 40.5
+          },
+          "09-Jul-2020": {
+            "underlying_price": 40.599998474121094
+          },
+          "10-Jul-2020": {
+            "underlying_price": 40.650001525878906
+          },
+          "13-Jul-2020": {
+            "underlying_price": 40.849998474121094
+          },
+          "14-Jul-2020": {
+            "underlying_price": 39.45000076293945
+          },
+          "15-Jul-2020": {
+            "underlying_price": 39.79999923706055
+          },
+          "16-Jul-2020": {
+            "underlying_price": 38.70000076293945
+          },
+          "17-Jul-2020": {
+            "underlying_price": 38.400001525878906
+          },
+          "20-Jul-2020": {
+            "underlying_price": 38.349998474121094
+          },
+          "21-Jul-2020": {
+            "underlying_price": 38.400001525878906
+          },
+          "22-Jul-2020": {
+            "underlying_price": 38.95000076293945
+          },
+          "23-Jul-2020": {
+            "underlying_price": 38.75
+          },
+          "24-Jul-2020": {
+            "underlying_price": 37.75
+          },
+          "27-Jul-2020": {
+            "underlying_price": 36.29999923706055
+          },
+          "28-Jul-2020": {
+            "underlying_price": 36.54999923706055
+          },
+          "29-Jul-2020": {
+            "underlying_price": 36.849998474121094
+          },
+          "30-Jul-2020": {
+            "underlying_price": 35.79999923706055
+          },
+          "31-Jul-2020": {
+            "underlying_price": 35.45000076293945
+          },
+          "03-Aug-2020": {
+            "underlying_price": 35.849998474121094
+          },
+          "04-Aug-2020": {
+            "underlying_price": 36.70000076293945
+          },
+          "05-Aug-2020": {
+            "underlying_price": 38.54999923706055
+          },
+          "06-Aug-2020": {
+            "underlying_price": 37.79999923706055
+          },
+          "07-Aug-2020": {
+            "underlying_price": 39.45000076293945
+          },
+          "10-Aug-2020": {
+            "underlying_price": 43.5
+          },
+          "11-Aug-2020": {
+            "underlying_price": 44.0
+          },
+          "12-Aug-2020": {
+            "underlying_price": 44.0
+          },
+          "13-Aug-2020": {
+            "underlying_price": 44.0
+          },
+          "14-Aug-2020": {
+            "underlying_price": 44.75
+          },
+          "17-Aug-2020": {
+            "underlying_price": 47.5
+          },
+          "18-Aug-2020": {
+            "underlying_price": 51.150001525878906
+          },
+          "19-Aug-2020": {
+            "underlying_price": 50.45000076293945
+          },
+          "20-Aug-2020": {
+            "underlying_price": 47.400001525878906
+          },
+          "21-Aug-2020": {
+            "underlying_price": 51.150001525878906
+          },
+          "24-Aug-2020": {
+            "underlying_price": 50.5
+          },
+          "25-Aug-2020": {
+            "underlying_price": 49.79999923706055
+          },
+          "26-Aug-2020": {
+            "underlying_price": 51.150001525878906
+          },
+          "27-Aug-2020": {
+            "underlying_price": 49.599998474121094
+          },
+          "28-Aug-2020": {
+            "underlying_price": 47.20000076293945
+          },
+          "31-Aug-2020": {
+            "underlying_price": 43.04999923706055
+          },
+          "01-Sep-2020": {
+            "underlying_price": 45.75
+          },
+          "02-Sep-2020": {
+            "underlying_price": 48.0
+          },
+          "03-Sep-2020": {
+            "underlying_price": 47.04999923706055
+          },
+          "04-Sep-2020": {
+            "underlying_price": 46.599998474121094
+          },
+          "07-Sep-2020": {
+            "underlying_price": 46.54999923706055
+          },
+          "08-Sep-2020": {
+            "underlying_price": 44.75
+          },
+          "09-Sep-2020": {
+            "underlying_price": 44.25
+          },
+          "10-Sep-2020": {
+            "underlying_price": 45.900001525878906
+          },
+          "11-Sep-2020": {
+            "underlying_price": 45.349998474121094
+          },
+          "14-Sep-2020": {
+            "underlying_price": 45.599998474121094
+          },
+          "15-Sep-2020": {
+            "underlying_price": 44.25
+          },
+          "16-Sep-2020": {
+            "underlying_price": 44.650001525878906
+          },
+          "17-Sep-2020": {
+            "underlying_price": 44.54999923706055
+          },
+          "18-Sep-2020": {
+            "underlying_price": 44.0
+          },
+          "21-Sep-2020": {
+            "underlying_price": 43.20000076293945
+          },
+          "22-Sep-2020": {
+            "underlying_price": 41.70000076293945
+          },
+          "23-Sep-2020": {
+            "underlying_price": 41.20000076293945
+          },
+          "24-Sep-2020": {
+            "underlying_price": 40.650001525878906
+          },
+          "25-Sep-2020": {
+            "underlying_price": 42.70000076293945
+          },
+          "28-Sep-2020": {
+            "underlying_price": 43.349998474121094
+          },
+          "29-Sep-2020": {
+            "underlying_price": 42.849998474121094
+          },
+          "30-Sep-2020": {
+            "underlying_price": 44.349998474121094
+          },
+          "01-Oct-2020": {
+            "underlying_price": 44.54999923706055
+          },
+          "05-Oct-2020": {
+            "underlying_price": 44.400001525878906
+          },
+          "06-Oct-2020": {
+            "underlying_price": 44.20000076293945
+          },
+          "07-Oct-2020": {
+            "underlying_price": 44.099998474121094
+          },
+          "08-Oct-2020": {
+            "underlying_price": 43.45000076293945
+          },
+          "09-Oct-2020": {
+            "underlying_price": 43.349998474121094
+          },
+          "12-Oct-2020": {
+            "underlying_price": 51.349998474121094
+          },
+          "13-Oct-2020": {
+            "underlying_price": 52.70000076293945
+          },
+          "14-Oct-2020": {
+            "underlying_price": 55.04999923706055
+          },
+          "15-Oct-2020": {
+            "underlying_price": 53.70000076293945
+          },
+          "16-Oct-2020": {
+            "underlying_price": 56.599998474121094
+          },
+          "19-Oct-2020": {
+            "underlying_price": 59.79999923706055
+          },
+          "20-Oct-2020": {
+            "underlying_price": 59.0
+          },
+          "21-Oct-2020": {
+            "underlying_price": 59.349998474121094
+          },
+          "22-Oct-2020": {
+            "underlying_price": 58.849998474121094
+          },
+          "23-Oct-2020": {
+            "underlying_price": 57.75
+          },
+          "26-Oct-2020": {
+            "underlying_price": 54.349998474121094
+          },
+          "27-Oct-2020": {
+            "underlying_price": 57.400001525878906
+          },
+          "28-Oct-2020": {
+            "underlying_price": 60.04999923706055
+          },
+          "29-Oct-2020": {
+            "underlying_price": 61.79999923706055
+          },
+          "30-Oct-2020": {
+            "underlying_price": 62.599998474121094
+          },
+          "02-Nov-2020": {
+            "underlying_price": 58.95000076293945
+          },
+          "03-Nov-2020": {
+            "underlying_price": 58.75
+          },
+          "04-Nov-2020": {
+            "underlying_price": 57.70000076293945
+          },
+          "05-Nov-2020": {
+            "underlying_price": 58.04999923706055
+          },
+          "06-Nov-2020": {
+            "underlying_price": 58.400001525878906
+          },
+          "09-Nov-2020": {
+            "underlying_price": 60.099998474121094
+          },
+          "10-Nov-2020": {
+            "underlying_price": 60.349998474121094
+          },
+          "11-Nov-2020": {
+            "underlying_price": 59.0
+          },
+          "12-Nov-2020": {
+            "underlying_price": 59.20000076293945
+          },
+          "13-Nov-2020": {
+            "underlying_price": 61.95000076293945
+          },
+          "14-Nov-2020": {
+            "underlying_price": 61.75
+          },
+          "17-Nov-2020": {
+            "underlying_price": 63.0
+          },
+          "18-Nov-2020": {
+            "underlying_price": 62.29999923706055
+          },
+          "19-Nov-2020": {
+            "underlying_price": 65.30000305175781
+          },
+          "20-Nov-2020": {
+            "underlying_price": 65.8499984741211
+          },
+          "23-Nov-2020": {
+            "underlying_price": 66.6500015258789
+          },
+          "24-Nov-2020": {
+            "underlying_price": 65.44999694824219
+          },
+          "25-Nov-2020": {
+            "underlying_price": 64.0
+          },
+          "26-Nov-2020": {
+            "underlying_price": 64.30000305175781
+          },
+          "27-Nov-2020": {
+            "underlying_price": 63.75
+          },
+          "01-Dec-2020": {
+            "underlying_price": 64.3499984741211
+          },
+          "02-Dec-2020": {
+            "underlying_price": 69.25
+          },
+          "03-Dec-2020": {
+            "underlying_price": 71.69999694824219
+          },
+          "04-Dec-2020": {
+            "underlying_price": 70.55000305175781
+          },
+          "07-Dec-2020": {
+            "underlying_price": 70.44999694824219
+          },
+          "08-Dec-2020": {
+            "underlying_price": 68.25
+          },
+          "09-Dec-2020": {
+            "underlying_price": 68.19999694824219
+          },
+          "10-Dec-2020": {
+            "underlying_price": 66.3499984741211
+          },
+          "11-Dec-2020": {
+            "underlying_price": 67.6500015258789
+          },
+          "14-Dec-2020": {
+            "underlying_price": 66.8499984741211
+          },
+          "15-Dec-2020": {
+            "underlying_price": 66.75
+          },
+          "16-Dec-2020": {
+            "underlying_price": 67.69999694824219
+          },
+          "17-Dec-2020": {
+            "underlying_price": 69.94999694824219
+          },
+          "18-Dec-2020": {
+            "underlying_price": 71.4000015258789
+          },
+          "21-Dec-2020": {
+            "underlying_price": 67.94999694824219
+          },
+          "22-Dec-2020": {
+            "underlying_price": 66.80000305175781
+          },
+          "23-Dec-2020": {
+            "underlying_price": 71.05000305175781
+          },
+          "24-Dec-2020": {
+            "underlying_price": 72.0999984741211
+          },
+          "28-Dec-2020": {
+            "underlying_price": 79.4000015258789
+          },
+          "29-Dec-2020": {
+            "underlying_price": 80.1500015258789
+          },
+          "30-Dec-2020": {
+            "underlying_price": 77.0
+          },
+          "31-Dec-2020": {
+            "underlying_price": 75.69999694824219
+          },
+          "01-Jan-2021": {
+            "underlying_price": 76.25
+          },
+          "04-Jan-2021": {
+            "underlying_price": 83.80000305175781
+          },
+          "05-Jan-2021": {
+            "underlying_price": 88.94999694824219
+          },
+          "06-Jan-2021": {
+            "underlying_price": 87.5
+          },
+          "07-Jan-2021": {
+            "underlying_price": 87.55000305175781
+          },
+          "08-Jan-2021": {
+            "underlying_price": 88.55000305175781
+          },
+          "11-Jan-2021": {
+            "underlying_price": 87.1500015258789
+          },
+          "12-Jan-2021": {
+            "underlying_price": 94.25
+          },
+          "13-Jan-2021": {
+            "underlying_price": 92.9000015258789
+          },
+          "14-Jan-2021": {
+            "underlying_price": 89.69999694824219
+          },
+          "15-Jan-2021": {
+            "underlying_price": 89.4000015258789
+          },
+          "18-Jan-2021": {
+            "underlying_price": 85.94999694824219
+          },
+          "19-Jan-2021": {
+            "underlying_price": 87.3499984741211
+          },
+          "20-Jan-2021": {
+            "underlying_price": 89.75
+          },
+          "21-Jan-2021": {
+            "underlying_price": 90.05000305175781
+          },
+          "22-Jan-2021": {
+            "underlying_price": 85.5999984741211
+          },
+          "25-Jan-2021": {
+            "underlying_price": 82.0
+          },
+          "27-Jan-2021": {
+            "underlying_price": 83.55000305175781
+          },
+          "28-Jan-2021": {
+            "underlying_price": 83.0
+          },
+          "29-Jan-2021": {
+            "underlying_price": 81.19999694824219
+          },
+          "01-Feb-2021": {
+            "underlying_price": 74.1500015258789
+          },
+          "02-Feb-2021": {
+            "underlying_price": 73.80000305175781
+          },
+          "03-Feb-2021": {
+            "underlying_price": 77.30000305175781
+          },
+          "04-Feb-2021": {
+            "underlying_price": 78.25
+          },
+          "05-Feb-2021": {
+            "underlying_price": 76.44999694824219
+          },
+          "08-Feb-2021": {
+            "underlying_price": 77.19999694824219
+          },
+          "09-Feb-2021": {
+            "underlying_price": 75.3499984741211
+          },
+          "10-Feb-2021": {
+            "underlying_price": 75.19999694824219
+          },
+          "11-Feb-2021": {
+            "underlying_price": 75.4000015258789
+          },
+          "12-Feb-2021": {
+            "underlying_price": 73.69999694824219
+          },
+          "15-Feb-2021": {
+            "underlying_price": 71.0
+          },
+          "16-Feb-2021": {
+            "underlying_price": 71.6500015258789
+          },
+          "17-Feb-2021": {
+            "underlying_price": 70.94999694824219
+          },
+          "18-Feb-2021": {
+            "underlying_price": 69.94999694824219
+          },
+          "19-Feb-2021": {
+            "underlying_price": 69.69999694824219
+          },
+          "22-Feb-2021": {
+            "underlying_price": 69.19999694824219
+          },
+          "23-Feb-2021": {
+            "underlying_price": 69.75
+          },
+          "24-Feb-2021": {
+            "underlying_price": 70.3499984741211
+          },
+          "25-Feb-2021": {
+            "underlying_price": 73.19999694824219
+          },
+          "26-Feb-2021": {
+            "underlying_price": 71.19999694824219
+          },
+          "01-Mar-2021": {
+            "underlying_price": 70.25
+          },
+          "02-Mar-2021": {
+            "underlying_price": 70.05000305175781
+          },
+          "03-Mar-2021": {
+            "underlying_price": 77.5999984741211
+          },
+          "04-Mar-2021": {
+            "underlying_price": 75.4000015258789
+          },
+          "05-Mar-2021": {
+            "underlying_price": 73.69999694824219
+          },
+          "08-Mar-2021": {
+            "underlying_price": 73.69999694824219
+          },
+          "09-Mar-2021": {
+            "underlying_price": 72.25
+          },
+          "10-Mar-2021": {
+            "underlying_price": 72.75
+          },
+          "12-Mar-2021": {
+            "underlying_price": 72.0
+          },
+          "15-Mar-2021": {
+            "underlying_price": 70.0
+          },
+          "16-Mar-2021": {
+            "underlying_price": 69.3499984741211
+          },
+          "17-Mar-2021": {
+            "underlying_price": 67.3499984741211
+          },
+          "18-Mar-2021": {
+            "underlying_price": 65.0999984741211
+          },
+          "19-Mar-2021": {
+            "underlying_price": 65.75
+          },
+          "22-Mar-2021": {
+            "underlying_price": 65.5
+          },
+          "23-Mar-2021": {
+            "underlying_price": 65.19999694824219
+          },
+          "24-Mar-2021": {
+            "underlying_price": 67.0999984741211
+          },
+          "25-Mar-2021": {
+            "underlying_price": 65.69999694824219
+          },
+          "26-Mar-2021": {
+            "underlying_price": 66.0999984741211
+          },
+          "30-Mar-2021": {
+            "underlying_price": 67.9000015258789
+          },
+          "31-Mar-2021": {
+            "underlying_price": 67.5999984741211
+          },
+          "01-Apr-2021": {
+            "underlying_price": 69.8499984741211
+          },
+          "05-Apr-2021": {
+            "underlying_price": 70.0999984741211
+          },
+          "06-Apr-2021": {
+            "underlying_price": 71.0
+          },
+          "07-Apr-2021": {
+            "underlying_price": 70.44999694824219
+          },
+          "08-Apr-2021": {
+            "underlying_price": 74.5999984741211
+          },
+          "09-Apr-2021": {
+            "underlying_price": 79.5999984741211
+          },
+          "12-Apr-2021": {
+            "underlying_price": 71.5
+          },
+          "13-Apr-2021": {
+            "underlying_price": 72.8499984741211
+          },
+          "15-Apr-2021": {
+            "underlying_price": 73.5999984741211
+          },
+          "16-Apr-2021": {
+            "underlying_price": 75.30000305175781
+          },
+          "19-Apr-2021": {
+            "underlying_price": 74.80000305175781
+          },
+          "20-Apr-2021": {
+            "underlying_price": 75.8499984741211
+          },
+          "22-Apr-2021": {
+            "underlying_price": 76.9000015258789
+          },
+          "23-Apr-2021": {
+            "underlying_price": 78.05000305175781
+          },
+          "26-Apr-2021": {
+            "underlying_price": 84.55000305175781
+          },
+          "27-Apr-2021": {
+            "underlying_price": 83.4000015258789
+          },
+          "28-Apr-2021": {
+            "underlying_price": 86.69999694824219
+          },
+          "29-Apr-2021": {
+            "underlying_price": 90.30000305175781
+          },
+          "30-Apr-2021": {
+            "underlying_price": 89.25
+          },
+          "03-May-2021": {
+            "underlying_price": 92.9000015258789
+          },
+          "04-May-2021": {
+            "underlying_price": 88.80000305175781
+          },
+          "05-May-2021": {
+            "underlying_price": 91.3499984741211
+          },
+          "06-May-2021": {
+            "underlying_price": 90.3499984741211
+          },
+          "07-May-2021": {
+            "underlying_price": 98.1500015258789
+          },
+          "10-May-2021": {
+            "underlying_price": 98.5
+          },
+          "11-May-2021": {
+            "underlying_price": 93.9000015258789
+          },
+          "12-May-2021": {
+            "underlying_price": 95.94999694824219
+          },
+          "14-May-2021": {
+            "underlying_price": 91.4000015258789
+          },
+          "17-May-2021": {
+            "underlying_price": 95.05000305175781
+          },
+          "18-May-2021": {
+            "underlying_price": 92.80000305175781
+          },
+          "19-May-2021": {
+            "underlying_price": 94.4000015258789
+          },
+          "20-May-2021": {
+            "underlying_price": 94.5
+          },
+          "21-May-2021": {
+            "underlying_price": 95.80000305175781
+          },
+          "24-May-2021": {
+            "underlying_price": 94.80000305175781
+          },
+          "25-May-2021": {
+            "underlying_price": 93.94999694824219
+          },
+          "26-May-2021": {
+            "underlying_price": 92.6500015258789
+          },
+          "27-May-2021": {
+            "underlying_price": 91.4000015258789
+          },
+          "28-May-2021": {
+            "underlying_price": 92.55000305175781
+          },
+          "31-May-2021": {
+            "underlying_price": 92.5999984741211
+          },
+          "01-Jun-2021": {
+            "underlying_price": 91.44999694824219
+          },
+          "02-Jun-2021": {
+            "underlying_price": 93.6500015258789
+          },
+          "03-Jun-2021": {
+            "underlying_price": 94.0
+          },
+          "04-Jun-2021": {
+            "underlying_price": 92.19999694824219
+          },
+          "07-Jun-2021": {
+            "underlying_price": 93.19999694824219
+          },
+          "08-Jun-2021": {
+            "underlying_price": 92.8499984741211
+          },
+          "09-Jun-2021": {
+            "underlying_price": 92.8499984741211
+          },
+          "10-Jun-2021": {
+            "underlying_price": 100.9000015258789
+          },
+          "11-Jun-2021": {
+            "underlying_price": 105.25
+          },
+          "14-Jun-2021": {
+            "underlying_price": 107.94999694824219
+          },
+          "15-Jun-2021": {
+            "underlying_price": 104.5
+          },
+          "16-Jun-2021": {
+            "underlying_price": 102.0999984741211
+          },
+          "17-Jun-2021": {
+            "underlying_price": 98.30000305175781
+          },
+          "18-Jun-2021": {
+            "underlying_price": 96.4000015258789
+          },
+          "21-Jun-2021": {
+            "underlying_price": 100.75
+          },
+          "22-Jun-2021": {
+            "underlying_price": 105.69999694824219
+          },
+          "23-Jun-2021": {
+            "underlying_price": 102.0999984741211
+          },
+          "24-Jun-2021": {
+            "underlying_price": 104.80000305175781
+          },
+          "25-Jun-2021": {
+            "underlying_price": 106.75
+          },
+          "28-Jun-2021": {
+            "underlying_price": 107.80000305175781
+          },
+          "29-Jun-2021": {
+            "underlying_price": 107.4000015258789
+          },
+          "30-Jun-2021": {
+            "underlying_price": 109.6500015258789
+          },
+          "01-Jul-2021": {
+            "underlying_price": 109.30000305175781
+          },
+          "02-Jul-2021": {
+            "underlying_price": 109.25
+          },
+          "05-Jul-2021": {
+            "underlying_price": 106.30000305175781
+          },
+          "06-Jul-2021": {
+            "underlying_price": 106.1500015258789
+          },
+          "07-Jul-2021": {
+            "underlying_price": 109.94999694824219
+          },
+          "08-Jul-2021": {
+            "underlying_price": 110.0999984741211
+          },
+          "09-Jul-2021": {
+            "underlying_price": 120.80000305175781
+          },
+          "12-Jul-2021": {
+            "underlying_price": 125.69999694824219
+          },
+          "13-Jul-2021": {
+            "underlying_price": 124.5999984741211
+          },
+          "14-Jul-2021": {
+            "underlying_price": 122.6500015258789
+          },
+          "15-Jul-2021": {
+            "underlying_price": 125.30000305175781
+          },
+          "16-Jul-2021": {
+            "underlying_price": 123.80000305175781
+          },
+          "19-Jul-2021": {
+            "underlying_price": 124.9000015258789
+          },
+          "20-Jul-2021": {
+            "underlying_price": 122.4000015258789
+          },
+          "22-Jul-2021": {
+            "underlying_price": 145.35000610351562
+          },
+          "23-Jul-2021": {
+            "underlying_price": 154.6999969482422
+          },
+          "26-Jul-2021": {
+            "underlying_price": 152.4499969482422
+          },
+          "27-Jul-2021": {
+            "underlying_price": 155.4499969482422
+          },
+          "28-Jul-2021": {
+            "underlying_price": 150.6999969482422
+          },
+          "29-Jul-2021": {
+            "underlying_price": 158.8000030517578
+          },
+          "30-Jul-2021": {
+            "underlying_price": 162.3000030517578
+          },
+          "02-Aug-2021": {
+            "underlying_price": 158.5500030517578
+          },
+          "03-Aug-2021": {
+            "underlying_price": 158.0
+          },
+          "04-Aug-2021": {
+            "underlying_price": 157.64999389648438
+          },
+          "05-Aug-2021": {
+            "underlying_price": 153.14999389648438
+          },
+          "06-Aug-2021": {
+            "underlying_price": 163.5500030517578
+          },
+          "09-Aug-2021": {
+            "underlying_price": 160.14999389648438
+          },
+          "10-Aug-2021": {
+            "underlying_price": 146.35000610351562
+          },
+          "11-Aug-2021": {
+            "underlying_price": 151.60000610351562
+          },
+          "12-Aug-2021": {
+            "underlying_price": 155.0500030517578
+          },
+          "13-Aug-2021": {
+            "underlying_price": 159.25
+          },
+          "16-Aug-2021": {
+            "underlying_price": 156.0
+          },
+          "17-Aug-2021": {
+            "underlying_price": 152.6999969482422
+          },
+          "18-Aug-2021": {
+            "underlying_price": 148.0500030517578
+          },
+          "20-Aug-2021": {
+            "underlying_price": 136.8000030517578
+          },
+          "23-Aug-2021": {
+            "underlying_price": 128.85000610351562
+          },
+          "24-Aug-2021": {
+            "underlying_price": 150.85000610351562
+          },
+          "25-Aug-2021": {
+            "underlying_price": 149.64999389648438
+          },
+          "26-Aug-2021": {
+            "underlying_price": 144.5500030517578
+          },
+          "27-Aug-2021": {
+            "underlying_price": 146.60000610351562
+          },
+          "30-Aug-2021": {
+            "underlying_price": 151.10000610351562
+          },
+          "31-Aug-2021": {
+            "underlying_price": 150.5
+          },
+          "01-Sep-2021": {
+            "underlying_price": 147.60000610351562
+          },
+          "02-Sep-2021": {
+            "underlying_price": 149.1999969482422
+          },
+          "03-Sep-2021": {
+            "underlying_price": 151.5500030517578
+          },
+          "06-Sep-2021": {
+            "underlying_price": 160.0
+          },
+          "07-Sep-2021": {
+            "underlying_price": 159.0500030517578
+          },
+          "08-Sep-2021": {
+            "underlying_price": 159.39999389648438
+          },
+          "09-Sep-2021": {
+            "underlying_price": 164.0500030517578
+          },
+          "13-Sep-2021": {
+            "underlying_price": 163.5
+          },
+          "14-Sep-2021": {
+            "underlying_price": 164.25
+          },
+          "15-Sep-2021": {
+            "underlying_price": 163.14999389648438
+          },
+          "16-Sep-2021": {
+            "underlying_price": 167.14999389648438
+          },
+          "17-Sep-2021": {
+            "underlying_price": 163.8000030517578
+          },
+          "20-Sep-2021": {
+            "underlying_price": 155.14999389648438
+          },
+          "21-Sep-2021": {
+            "underlying_price": 157.85000610351562
+          },
+          "22-Sep-2021": {
+            "underlying_price": 161.14999389648438
+          },
+          "23-Sep-2021": {
+            "underlying_price": 162.8000030517578
+          },
+          "24-Sep-2021": {
+            "underlying_price": 160.25
+          },
+          "27-Sep-2021": {
+            "underlying_price": 156.6999969482422
+          },
+          "28-Sep-2021": {
+            "underlying_price": 156.4499969482422
+          },
+          "29-Sep-2021": {
+            "underlying_price": 160.25
+          },
+          "30-Sep-2021": {
+            "underlying_price": 162.0
+          },
+          "01-Oct-2021": {
+            "underlying_price": 168.35000610351562
+          },
+          "04-Oct-2021": {
+            "underlying_price": 175.35000610351562
+          },
+          "05-Oct-2021": {
+            "underlying_price": 177.10000610351562
+          },
+          "06-Oct-2021": {
+            "underlying_price": 170.10000610351562
+          },
+          "07-Oct-2021": {
+            "underlying_price": 167.8000030517578
+          },
+          "08-Oct-2021": {
+            "underlying_price": 168.35000610351562
+          },
+          "11-Oct-2021": {
+            "underlying_price": 167.64999389648438
+          },
+          "12-Oct-2021": {
+            "underlying_price": 166.60000610351562
+          },
+          "13-Oct-2021": {
+            "underlying_price": 172.0500030517578
+          },
+          "14-Oct-2021": {
+            "underlying_price": 172.0500030517578
+          },
+          "18-Oct-2021": {
+            "underlying_price": 185.4499969482422
+          },
+          "19-Oct-2021": {
+            "underlying_price": 177.6999969482422
+          },
+          "20-Oct-2021": {
+            "underlying_price": 172.64999389648438
+          },
+          "21-Oct-2021": {
+            "underlying_price": 173.0500030517578
+          },
+          "22-Oct-2021": {
+            "underlying_price": 168.0500030517578
+          },
+          "25-Oct-2021": {
+            "underlying_price": 166.89999389648438
+          },
+          "26-Oct-2021": {
+            "underlying_price": 192.35000610351562
+          },
+          "27-Oct-2021": {
+            "underlying_price": 195.0500030517578
+          },
+          "28-Oct-2021": {
+            "underlying_price": 190.85000610351562
+          },
+          "29-Oct-2021": {
+            "underlying_price": 191.75
+          },
+          "01-Nov-2021": {
+            "underlying_price": 197.5
+          },
+          "02-Nov-2021": {
+            "underlying_price": 196.3000030517578
+          },
+          "03-Nov-2021": {
+            "underlying_price": 193.64999389648438
+          },
+          "04-Nov-2021": {
+            "underlying_price": 192.89999389648438
+          },
+          "08-Nov-2021": {
+            "underlying_price": 195.8000030517578
+          },
+          "09-Nov-2021": {
+            "underlying_price": 191.35000610351562
+          },
+          "10-Nov-2021": {
+            "underlying_price": 182.9499969482422
+          },
+          "11-Nov-2021": {
+            "underlying_price": 179.9499969482422
+          },
+          "12-Nov-2021": {
+            "underlying_price": 184.25
+          },
+          "15-Nov-2021": {
+            "underlying_price": 182.5
+          },
+          "16-Nov-2021": {
+            "underlying_price": 182.1999969482422
+          },
+          "17-Nov-2021": {
+            "underlying_price": 183.75
+          },
+          "18-Nov-2021": {
+            "underlying_price": 175.25
+          },
+          "22-Nov-2021": {
+            "underlying_price": 167.4499969482422
+          },
+          "23-Nov-2021": {
+            "underlying_price": 174.3000030517578
+          },
+          "24-Nov-2021": {
+            "underlying_price": 174.0
+          },
+          "25-Nov-2021": {
+            "underlying_price": 181.25
+          },
+          "26-Nov-2021": {
+            "underlying_price": 168.3000030517578
+          },
+          "29-Nov-2021": {
+            "underlying_price": 158.3000030517578
+          },
+          "30-Nov-2021": {
+            "underlying_price": 165.14999389648438
+          },
+          "01-Dec-2021": {
+            "underlying_price": 164.8000030517578
+          },
+          "02-Dec-2021": {
+            "underlying_price": 163.6999969482422
+          },
+          "03-Dec-2021": {
+            "underlying_price": 162.8000030517578
+          },
+          "06-Dec-2021": {
+            "underlying_price": 160.14999389648438
+          },
+          "07-Dec-2021": {
+            "underlying_price": 170.8000030517578
+          },
+          "08-Dec-2021": {
+            "underlying_price": 173.0
+          },
+          "09-Dec-2021": {
+            "underlying_price": 171.89999389648438
+          },
+          "10-Dec-2021": {
+            "underlying_price": 173.10000610351562
+          },
+          "13-Dec-2021": {
+            "underlying_price": 184.25
+          },
+          "14-Dec-2021": {
+            "underlying_price": 190.25
+          },
+          "15-Dec-2021": {
+            "underlying_price": 187.1999969482422
+          },
+          "16-Dec-2021": {
+            "underlying_price": 184.0500030517578
+          },
+          "17-Dec-2021": {
+            "underlying_price": 188.0
+          },
+          "20-Dec-2021": {
+            "underlying_price": 177.75
+          },
+          "21-Dec-2021": {
+            "underlying_price": 180.1999969482422
+          },
+          "22-Dec-2021": {
+            "underlying_price": 186.14999389648438
+          },
+          "23-Dec-2021": {
+            "underlying_price": 181.3000030517578
+          },
+          "24-Dec-2021": {
+            "underlying_price": 183.3000030517578
+          },
+          "27-Dec-2021": {
+            "underlying_price": 192.60000610351562
+          },
+          "28-Dec-2021": {
+            "underlying_price": 194.64999389648438
+          },
+          "29-Dec-2021": {
+            "underlying_price": 194.75
+          },
+          "30-Dec-2021": {
+            "underlying_price": 196.5500030517578
+          },
+          "31-Dec-2021": {
+            "underlying_price": 198.1999969482422
+          },
+          "03-Jan-2022": {
+            "underlying_price": 195.60000610351562
+          },
+          "04-Jan-2022": {
+            "underlying_price": 198.8000030517578
+          },
+          "05-Jan-2022": {
+            "underlying_price": 200.89999389648438
+          },
+          "06-Jan-2022": {
+            "underlying_price": 198.14999389648438
+          },
+          "07-Jan-2022": {
+            "underlying_price": 195.5
+          },
+          "10-Jan-2022": {
+            "underlying_price": 194.64999389648438
+          },
+          "11-Jan-2022": {
+            "underlying_price": 189.35000610351562
+          },
+          "12-Jan-2022": {
+            "underlying_price": 191.89999389648438
+          },
+          "13-Jan-2022": {
+            "underlying_price": 206.14999389648438
+          },
+          "14-Jan-2022": {
+            "underlying_price": 205.0
+          },
+          "17-Jan-2022": {
+            "underlying_price": 206.5
+          },
+          "18-Jan-2022": {
+            "underlying_price": 203.60000610351562
+          },
+          "19-Jan-2022": {
+            "underlying_price": 210.39999389648438
+          },
+          "20-Jan-2022": {
+            "underlying_price": 216.4499969482422
+          },
+          "21-Jan-2022": {
+            "underlying_price": 211.85000610351562
+          },
+          "24-Jan-2022": {
+            "underlying_price": 195.25
+          },
+          "25-Jan-2022": {
+            "underlying_price": 201.3000030517578
+          },
+          "27-Jan-2022": {
+            "underlying_price": 204.10000610351562
+          },
+          "28-Jan-2022": {
+            "underlying_price": 201.0500030517578
+          },
+          "31-Jan-2022": {
+            "underlying_price": 202.89999389648438
+          },
+          "01-Feb-2022": {
+            "underlying_price": 207.0
+          },
+          "02-Feb-2022": {
+            "underlying_price": 210.39999389648438
+          },
+          "03-Feb-2022": {
+            "underlying_price": 211.60000610351562
+          },
+          "04-Feb-2022": {
+            "underlying_price": 216.4499969482422
+          },
+          "07-Feb-2022": {
+            "underlying_price": 217.6999969482422
+          },
+          "08-Feb-2022": {
+            "underlying_price": 211.3000030517578
+          },
+          "09-Feb-2022": {
+            "underlying_price": 212.64999389648438
+          },
+          "10-Feb-2022": {
+            "underlying_price": 208.35000610351562
+          },
+          "11-Feb-2022": {
+            "underlying_price": 204.5
+          },
+          "14-Feb-2022": {
+            "underlying_price": 191.6999969482422
+          },
+          "15-Feb-2022": {
+            "underlying_price": 196.89999389648438
+          },
+          "16-Feb-2022": {
+            "underlying_price": 199.5
+          },
+          "17-Feb-2022": {
+            "underlying_price": 199.89999389648438
+          },
+          "18-Feb-2022": {
+            "underlying_price": 196.0
+          },
+          "21-Feb-2022": {
+            "underlying_price": 189.5500030517578
+          },
+          "22-Feb-2022": {
+            "underlying_price": 191.85000610351562
+          },
+          "23-Feb-2022": {
+            "underlying_price": 191.75
+          },
+          "24-Feb-2022": {
+            "underlying_price": 176.64999389648438
+          },
+          "25-Feb-2022": {
+            "underlying_price": 189.5500030517578
+          },
+          "28-Feb-2022": {
+            "underlying_price": 194.0
+          },
+          "02-Mar-2022": {
+            "underlying_price": 195.0
+          },
+          "03-Mar-2022": {
+            "underlying_price": 192.89999389648438
+          },
+          "04-Mar-2022": {
+            "underlying_price": 197.4499969482422
+          },
+          "07-Mar-2022": {
+            "underlying_price": 188.8000030517578
+          },
+          "08-Mar-2022": {
+            "underlying_price": 187.75
+          },
+          "09-Mar-2022": {
+            "underlying_price": 183.5500030517578
+          },
+          "10-Mar-2022": {
+            "underlying_price": 182.35000610351562
+          },
+          "11-Mar-2022": {
+            "underlying_price": 178.3000030517578
+          },
+          "14-Mar-2022": {
+            "underlying_price": 185.89999389648438
+          },
+          "15-Mar-2022": {
+            "underlying_price": 175.75
+          },
+          "16-Mar-2022": {
+            "underlying_price": 179.85000610351562
+          },
+          "17-Mar-2022": {
+            "underlying_price": 187.64999389648438
+          },
+          "21-Mar-2022": {
+            "underlying_price": 187.85000610351562
+          },
+          "22-Mar-2022": {
+            "underlying_price": 187.5
+          },
+          "23-Mar-2022": {
+            "underlying_price": 186.1999969482422
+          },
+          "24-Mar-2022": {
+            "underlying_price": 190.6999969482422
+          },
+          "25-Mar-2022": {
+            "underlying_price": 188.85000610351562
+          },
+          "28-Mar-2022": {
+            "underlying_price": 188.0500030517578
+          },
+          "29-Mar-2022": {
+            "underlying_price": 194.5
+          },
+          "30-Mar-2022": {
+            "underlying_price": 197.60000610351562
+          },
+          "31-Mar-2022": {
+            "underlying_price": 202.5500030517578
+          },
+          "01-Apr-2022": {
+            "underlying_price": 201.5500030517578
+          },
+          "04-Apr-2022": {
+            "underlying_price": 202.1999969482422
+          },
+          "05-Apr-2022": {
+            "underlying_price": 198.4499969482422
+          },
+          "06-Apr-2022": {
+            "underlying_price": 198.0
+          },
+          "07-Apr-2022": {
+            "underlying_price": 197.85000610351562
+          },
+          "08-Apr-2022": {
+            "underlying_price": 203.4499969482422
+          },
+          "11-Apr-2022": {
+            "underlying_price": 203.5
+          },
+          "12-Apr-2022": {
+            "underlying_price": 202.5
+          },
+          "13-Apr-2022": {
+            "underlying_price": 202.75
+          },
+          "18-Apr-2022": {
+            "underlying_price": 204.75
+          },
+          "19-Apr-2022": {
+            "underlying_price": 202.5
+          },
+          "20-Apr-2022": {
+            "underlying_price": 200.0
+          },
+          "21-Apr-2022": {
+            "underlying_price": 200.35000610351562
+          },
+          "22-Apr-2022": {
+            "underlying_price": 200.35000610351562
+          },
+          "25-Apr-2022": {
+            "underlying_price": 190.5500030517578
+          },
+          "26-Apr-2022": {
+            "underlying_price": 188.9499969482422
+          },
+          "27-Apr-2022": {
+            "underlying_price": 187.85000610351562
+          },
+          "28-Apr-2022": {
+            "underlying_price": 185.1999969482422
+          },
+          "29-Apr-2022": {
+            "underlying_price": 182.89999389648438
+          },
+          "02-May-2022": {
+            "underlying_price": 179.8000030517578
+          },
+          "04-May-2022": {
+            "underlying_price": 179.5
+          },
+          "05-May-2022": {
+            "underlying_price": 173.35000610351562
+          },
+          "06-May-2022": {
+            "underlying_price": 166.39999389648438
+          },
+          "09-May-2022": {
+            "underlying_price": 165.89999389648438
+          },
+          "10-May-2022": {
+            "underlying_price": 160.3000030517578
+          },
+          "11-May-2022": {
+            "underlying_price": 145.5
+          },
+          "12-May-2022": {
+            "underlying_price": 142.9499969482422
+          },
+          "13-May-2022": {
+            "underlying_price": 145.4499969482422
+          },
+          "16-May-2022": {
+            "underlying_price": 143.0
+          },
+          "17-May-2022": {
+            "underlying_price": 153.64999389648438
+          },
+          "18-May-2022": {
+            "underlying_price": 147.85000610351562
+          },
+          "19-May-2022": {
+            "underlying_price": 144.4499969482422
+          },
+          "20-May-2022": {
+            "underlying_price": 153.39999389648438
+          },
+          "23-May-2022": {
+            "underlying_price": 125.6500015258789
+          },
+          "24-May-2022": {
+            "underlying_price": 118.8499984741211
+          },
+          "25-May-2022": {
+            "underlying_price": 113.19999694824219
+          },
+          "26-May-2022": {
+            "underlying_price": 117.19999694824219
+          },
+          "27-May-2022": {
+            "underlying_price": 117.9000015258789
+          },
+          "30-May-2022": {
+            "underlying_price": 115.1500015258789
+          },
+          "31-May-2022": {
+            "underlying_price": 112.0
+          },
+          "01-Jun-2022": {
+            "underlying_price": 113.0999984741211
+          },
+          "02-Jun-2022": {
+            "underlying_price": 114.30000305175781
+          },
+          "03-Jun-2022": {
+            "underlying_price": 116.0999984741211
+          },
+          "06-Jun-2022": {
+            "underlying_price": 114.6500015258789
+          },
+          "07-Jun-2022": {
+            "underlying_price": 113.0999984741211
+          },
+          "08-Jun-2022": {
+            "underlying_price": 115.94999694824219
+          },
+          "09-Jun-2022": {
+            "underlying_price": 113.6500015258789
+          },
+          "10-Jun-2022": {
+            "underlying_price": 113.30000305175781
+          },
+          "13-Jun-2022": {
+            "underlying_price": 107.75
+          },
+          "14-Jun-2022": {
+            "underlying_price": 104.94999694824219
+          },
+          "15-Jun-2022": {
+            "underlying_price": 104.44999694824219
+          },
+          "16-Jun-2022": {
+            "underlying_price": 97.94999694824219
+          },
+          "17-Jun-2022": {
+            "underlying_price": 101.69999694824219
+          },
+          "20-Jun-2022": {
+            "underlying_price": 97.5999984741211
+          },
+          "21-Jun-2022": {
+            "underlying_price": 103.0
+          },
+          "22-Jun-2022": {
+            "underlying_price": 97.8499984741211
+          },
+          "23-Jun-2022": {
+            "underlying_price": 99.5999984741211
+          },
+          "24-Jun-2022": {
+            "underlying_price": 98.80000305175781
+          },
+          "27-Jun-2022": {
+            "underlying_price": 99.9000015258789
+          },
+          "28-Jun-2022": {
+            "underlying_price": 99.44999694824219
+          },
+          "29-Jun-2022": {
+            "underlying_price": 103.0999984741211
+          },
+          "30-Jun-2022": {
+            "underlying_price": 99.80000305175781
+          },
+          "01-Jul-2022": {
+            "underlying_price": 99.80000305175781
+          },
+          "04-Jul-2022": {
+            "underlying_price": 100.25
+          },
+          "05-Jul-2022": {
+            "underlying_price": 100.80000305175781
+          },
+          "06-Jul-2022": {
+            "underlying_price": 99.80000305175781
+          },
+          "07-Jul-2022": {
+            "underlying_price": 103.5999984741211
+          },
+          "08-Jul-2022": {
+            "underlying_price": 103.30000305175781
+          },
+          "11-Jul-2022": {
+            "underlying_price": 104.3499984741211
+          },
+          "12-Jul-2022": {
+            "underlying_price": 105.30000305175781
+          },
+          "13-Jul-2022": {
+            "underlying_price": 107.19999694824219
+          },
+          "14-Jul-2022": {
+            "underlying_price": 111.75
+          },
+          "15-Jul-2022": {
+            "underlying_price": 108.94999694824219
+          },
+          "18-Jul-2022": {
+            "underlying_price": 114.44999694824219
+          },
+          "19-Jul-2022": {
+            "underlying_price": 114.94999694824219
+          },
+          "20-Jul-2022": {
+            "underlying_price": 114.6500015258789
+          },
+          "21-Jul-2022": {
+            "underlying_price": 116.0
+          },
+          "22-Jul-2022": {
+            "underlying_price": 120.0
+          },
+          "25-Jul-2022": {
+            "underlying_price": 122.0
+          },
+          "26-Jul-2022": {
+            "underlying_price": 115.44999694824219
+          },
+          "27-Jul-2022": {
+            "underlying_price": 116.19999694824219
+          },
+          "28-Jul-2022": {
+            "underlying_price": 114.4000015258789
+          },
+          "29-Jul-2022": {
+            "underlying_price": 118.8499984741211
+          },
+          "01-Aug-2022": {
+            "underlying_price": 121.0
+          },
+          "02-Aug-2022": {
+            "underlying_price": 118.8499984741211
+          },
+          "03-Aug-2022": {
+            "underlying_price": 116.6500015258789
+          },
+          "04-Aug-2022": {
+            "underlying_price": 118.25
+          },
+          "05-Aug-2022": {
+            "underlying_price": 116.69999694824219
+          },
+          "08-Aug-2022": {
+            "underlying_price": 120.1500015258789
+          },
+          "10-Aug-2022": {
+            "underlying_price": 117.75
+          },
+          "11-Aug-2022": {
+            "underlying_price": 116.19999694824219
+          },
+          "12-Aug-2022": {
+            "underlying_price": 118.1500015258789
+          },
+          "16-Aug-2022": {
+            "underlying_price": 120.0
+          },
+          "17-Aug-2022": {
+            "underlying_price": 121.05000305175781
+          },
+          "18-Aug-2022": {
+            "underlying_price": 130.0500030517578
+          },
+          "19-Aug-2022": {
+            "underlying_price": 125.94999694824219
+          },
+          "22-Aug-2022": {
+            "underlying_price": 121.80000305175781
+          },
+          "23-Aug-2022": {
+            "underlying_price": 121.94999694824219
+          },
+          "24-Aug-2022": {
+            "underlying_price": 124.8499984741211
+          },
+          "25-Aug-2022": {
+            "underlying_price": 126.94999694824219
+          },
+          "26-Aug-2022": {
+            "underlying_price": 128.9499969482422
+          },
+          "29-Aug-2022": {
+            "underlying_price": 126.0
+          },
+          "30-Aug-2022": {
+            "underlying_price": 128.0
+          },
+          "01-Sep-2022": {
+            "underlying_price": 129.9499969482422
+          },
+          "02-Sep-2022": {
+            "underlying_price": 129.0
+          },
+          "05-Sep-2022": {
+            "underlying_price": 129.0
+          },
+          "06-Sep-2022": {
+            "underlying_price": 130.39999389648438
+          },
+          "07-Sep-2022": {
+            "underlying_price": 132.60000610351562
+          },
+          "08-Sep-2022": {
+            "underlying_price": 133.8000030517578
+          },
+          "09-Sep-2022": {
+            "underlying_price": 132.64999389648438
+          },
+          "12-Sep-2022": {
+            "underlying_price": 132.5
+          },
+          "13-Sep-2022": {
+            "underlying_price": 133.3000030517578
+          },
+          "14-Sep-2022": {
+            "underlying_price": 138.9499969482422
+          },
+          "15-Sep-2022": {
+            "underlying_price": 137.39999389648438
+          },
+          "16-Sep-2022": {
+            "underlying_price": 137.85000610351562
+          },
+          "19-Sep-2022": {
+            "underlying_price": 134.5500030517578
+          },
+          "20-Sep-2022": {
+            "underlying_price": 136.0
+          },
+          "21-Sep-2022": {
+            "underlying_price": 138.3000030517578
+          },
+          "22-Sep-2022": {
+            "underlying_price": 141.0
+          },
+          "23-Sep-2022": {
+            "underlying_price": 137.10000610351562
+          },
+          "26-Sep-2022": {
+            "underlying_price": 129.85000610351562
+          },
+          "27-Sep-2022": {
+            "underlying_price": 125.6500015258789
+          },
+          "28-Sep-2022": {
+            "underlying_price": 122.25
+          },
+          "29-Sep-2022": {
+            "underlying_price": 121.05000305175781
+          },
+          "30-Sep-2022": {
+            "underlying_price": 125.25
+          },
+          "03-Oct-2022": {
+            "underlying_price": 128.0500030517578
+          },
+          "04-Oct-2022": {
+            "underlying_price": 130.85000610351562
+          },
+          "06-Oct-2022": {
+            "underlying_price": 133.5
+          },
+          "07-Oct-2022": {
+            "underlying_price": 131.0500030517578
+          },
+          "10-Oct-2022": {
+            "underlying_price": 129.10000610351562
+          },
+          "11-Oct-2022": {
+            "underlying_price": 123.80000305175781
+          },
+          "12-Oct-2022": {
+            "underlying_price": 129.25
+          },
+          "13-Oct-2022": {
+            "underlying_price": 129.14999389648438
+          },
+          "14-Oct-2022": {
+            "underlying_price": 132.10000610351562
+          },
+          "17-Oct-2022": {
+            "underlying_price": 129.64999389648438
+          },
+          "18-Oct-2022": {
+            "underlying_price": 134.35000610351562
+          },
+          "19-Oct-2022": {
+            "underlying_price": 135.10000610351562
+          },
+          "20-Oct-2022": {
+            "underlying_price": 132.1999969482422
+          },
+          "21-Oct-2022": {
+            "underlying_price": 132.85000610351562
+          },
+          "24-Oct-2022": {
+            "underlying_price": 134.89999389648438
+          },
+          "25-Oct-2022": {
+            "underlying_price": 139.14999389648438
+          },
+          "27-Oct-2022": {
+            "underlying_price": 141.39999389648438
+          },
+          "28-Oct-2022": {
+            "underlying_price": 138.5
+          },
+          "31-Oct-2022": {
+            "underlying_price": 141.5500030517578
+          },
+          "01-Nov-2022": {
+            "underlying_price": 147.9499969482422
+          },
+          "02-Nov-2022": {
+            "underlying_price": 147.0
+          },
+          "03-Nov-2022": {
+            "underlying_price": 148.6999969482422
+          },
+          "04-Nov-2022": {
+            "underlying_price": 153.85000610351562
+          },
+          "07-Nov-2022": {
+            "underlying_price": 164.60000610351562
+          },
+          "09-Nov-2022": {
+            "underlying_price": 161.89999389648438
+          },
+          "10-Nov-2022": {
+            "underlying_price": 158.5500030517578
+          },
+          "11-Nov-2022": {
+            "underlying_price": 162.60000610351562
+          },
+          "14-Nov-2022": {
+            "underlying_price": 168.89999389648438
+          },
+          "15-Nov-2022": {
+            "underlying_price": 170.14999389648438
+          },
+          "16-Nov-2022": {
+            "underlying_price": 169.89999389648438
+          },
+          "17-Nov-2022": {
+            "underlying_price": 171.4499969482422
+          },
+          "18-Nov-2022": {
+            "underlying_price": 166.60000610351562
+          },
+          "21-Nov-2022": {
+            "underlying_price": 180.64999389648438
+          },
+          "22-Nov-2022": {
+            "underlying_price": 178.85000610351562
+          },
+          "23-Nov-2022": {
+            "underlying_price": 174.8000030517578
+          },
+          "24-Nov-2022": {
+            "underlying_price": 173.35000610351562
+          },
+          "25-Nov-2022": {
+            "underlying_price": 176.5500030517578
+          },
+          "28-Nov-2022": {
+            "underlying_price": 174.85000610351562
+          },
+          "29-Nov-2022": {
+            "underlying_price": 169.85000610351562
+          },
+          "30-Nov-2022": {
+            "underlying_price": 173.6999969482422
+          },
+          "01-Dec-2022": {
+            "underlying_price": 176.39999389648438
+          },
+          "02-Dec-2022": {
+            "underlying_price": 176.9499969482422
+          },
+          "05-Dec-2022": {
+            "underlying_price": 179.0
+          },
+          "06-Dec-2022": {
+            "underlying_price": 197.3000030517578
+          },
+          "07-Dec-2022": {
+            "underlying_price": 203.14999389648438
+          },
+          "08-Dec-2022": {
+            "underlying_price": 200.1999969482422
+          },
+          "09-Dec-2022": {
+            "underlying_price": 195.39999389648438
+          },
+          "12-Dec-2022": {
+            "underlying_price": 214.0500030517578
+          },
+          "13-Dec-2022": {
+            "underlying_price": 223.39999389648438
+          },
+          "14-Dec-2022": {
+            "underlying_price": 221.14999389648438
+          },
+          "15-Dec-2022": {
+            "underlying_price": 219.0
+          },
+          "16-Dec-2022": {
+            "underlying_price": 215.4499969482422
+          },
+          "19-Dec-2022": {
+            "underlying_price": 216.6999969482422
+          },
+          "20-Dec-2022": {
+            "underlying_price": 212.89999389648438
+          },
+          "21-Dec-2022": {
+            "underlying_price": 207.85000610351562
+          },
+          "22-Dec-2022": {
+            "underlying_price": 209.8000030517578
+          },
+          "23-Dec-2022": {
+            "underlying_price": 207.5500030517578
+          },
+          "26-Dec-2022": {
+            "underlying_price": 218.1999969482422
+          },
+          "27-Dec-2022": {
+            "underlying_price": 219.89999389648438
+          },
+          "28-Dec-2022": {
+            "underlying_price": 219.25
+          },
+          "29-Dec-2022": {
+            "underlying_price": 226.3000030517578
+          },
+          "30-Dec-2022": {
+            "underlying_price": 239.14999389648438
+          },
+          "02-Jan-2023": {
+            "underlying_price": 253.3000030517578
+          },
+          "03-Jan-2023": {
+            "underlying_price": 248.6999969482422
+          },
+          "04-Jan-2023": {
+            "underlying_price": 240.35000610351562
+          },
+          "05-Jan-2023": {
+            "underlying_price": 237.64999389648438
+          },
+          "06-Jan-2023": {
+            "underlying_price": 239.3000030517578
+          },
+          "09-Jan-2023": {
+            "underlying_price": 239.89999389648438
+          },
+          "10-Jan-2023": {
+            "underlying_price": 235.39999389648438
+          },
+          "11-Jan-2023": {
+            "underlying_price": 235.10000610351562
+          },
+          "12-Jan-2023": {
+            "underlying_price": 234.75
+          },
+          "13-Jan-2023": {
+            "underlying_price": 236.5
+          },
+          "16-Jan-2023": {
+            "underlying_price": 243.64999389648438
+          },
+          "17-Jan-2023": {
+            "underlying_price": 244.0500030517578
+          },
+          "18-Jan-2023": {
+            "underlying_price": 243.39999389648438
+          },
+          "19-Jan-2023": {
+            "underlying_price": 245.75
+          },
+          "20-Jan-2023": {
+            "underlying_price": 255.4499969482422
+          },
+          "23-Jan-2023": {
+            "underlying_price": 257.70001220703125
+          },
+          "24-Jan-2023": {
+            "underlying_price": 256.95001220703125
+          },
+          "25-Jan-2023": {
+            "underlying_price": 257.8500061035156
+          },
+          "27-Jan-2023": {
+            "underlying_price": 257.04998779296875
+          },
+          "30-Jan-2023": {
+            "underlying_price": 254.0500030517578
+          },
+          "31-Jan-2023": {
+            "underlying_price": 254.64999389648438
+          },
+          "01-Feb-2023": {
+            "underlying_price": 262.04998779296875
+          },
+          "02-Feb-2023": {
+            "underlying_price": 265.5
+          },
+          "03-Feb-2023": {
+            "underlying_price": 266.20001220703125
+          },
+          "06-Feb-2023": {
+            "underlying_price": 263.20001220703125
+          },
+          "07-Feb-2023": {
+            "underlying_price": 258.5
+          },
+          "08-Feb-2023": {
+            "underlying_price": 262.75
+          },
+          "09-Feb-2023": {
+            "underlying_price": 262.6000061035156
+          },
+          "10-Feb-2023": {
+            "underlying_price": 257.3500061035156
+          },
+          "13-Feb-2023": {
+            "underlying_price": 257.25
+          },
+          "14-Feb-2023": {
+            "underlying_price": 257.04998779296875
+          },
+          "15-Feb-2023": {
+            "underlying_price": 256.0
+          },
+          "16-Feb-2023": {
+            "underlying_price": 257.29998779296875
+          },
+          "17-Feb-2023": {
+            "underlying_price": 264.0
+          },
+          "20-Feb-2023": {
+            "underlying_price": 267.70001220703125
+          },
+          "21-Feb-2023": {
+            "underlying_price": 273.1499938964844
+          },
+          "22-Feb-2023": {
+            "underlying_price": 264.20001220703125
+          },
+          "23-Feb-2023": {
+            "underlying_price": 270.95001220703125
+          },
+          "24-Feb-2023": {
+            "underlying_price": 266.20001220703125
+          },
+          "27-Feb-2023": {
+            "underlying_price": 257.3500061035156
+          },
+          "28-Feb-2023": {
+            "underlying_price": 267.0
+          },
+          "01-Mar-2023": {
+            "underlying_price": 271.1499938964844
+          },
+          "02-Mar-2023": {
+            "underlying_price": 278.95001220703125
+          },
+          "03-Mar-2023": {
+            "underlying_price": 279.54998779296875
+          },
+          "06-Mar-2023": {
+            "underlying_price": 299.3500061035156
+          },
+          "08-Mar-2023": {
+            "underlying_price": 310.3999938964844
+          },
+          "09-Mar-2023": {
+            "underlying_price": 308.8999938964844
+          },
+          "10-Mar-2023": {
+            "underlying_price": 312.3500061035156
+          },
+          "13-Mar-2023": {
+            "underlying_price": 308.95001220703125
+          },
+          "14-Mar-2023": {
+            "underlying_price": 310.6000061035156
+          },
+          "15-Mar-2023": {
+            "underlying_price": 317.79998779296875
+          },
+          "16-Mar-2023": {
+            "underlying_price": 317.1499938964844
+          },
+          "17-Mar-2023": {
+            "underlying_price": 293.1000061035156
+          },
+          "20-Mar-2023": {
+            "underlying_price": 286.8999938964844
+          },
+          "21-Mar-2023": {
+            "underlying_price": 291.04998779296875
+          },
+          "22-Mar-2023": {
+            "underlying_price": 294.6000061035156
+          },
+          "23-Mar-2023": {
+            "underlying_price": 294.45001220703125
+          },
+          "24-Mar-2023": {
+            "underlying_price": 291.45001220703125
+          },
+          "27-Mar-2023": {
+            "underlying_price": 291.6499938964844
+          },
+          "28-Mar-2023": {
+            "underlying_price": 279.95001220703125
+          },
+          "29-Mar-2023": {
+            "underlying_price": 279.25
+          },
+          "31-Mar-2023": {
+            "underlying_price": 289.79998779296875
+          },
+          "03-Apr-2023": {
+            "underlying_price": 289.25
+          },
+          "05-Apr-2023": {
+            "underlying_price": 288.20001220703125
+          },
+          "06-Apr-2023": {
+            "underlying_price": 288.3500061035156
+          },
+          "10-Apr-2023": {
+            "underlying_price": 283.79998779296875
+          },
+          "11-Apr-2023": {
+            "underlying_price": 277.0
+          },
+          "12-Apr-2023": {
+            "underlying_price": 265.29998779296875
+          },
+          "13-Apr-2023": {
+            "underlying_price": 265.8999938964844
+          },
+          "17-Apr-2023": {
+            "underlying_price": 261.79998779296875
+          },
+          "18-Apr-2023": {
+            "underlying_price": 260.5
+          },
+          "19-Apr-2023": {
+            "underlying_price": 260.04998779296875
+          },
+          "20-Apr-2023": {
+            "underlying_price": 265.1499938964844
+          },
+          "21-Apr-2023": {
+            "underlying_price": 268.1000061035156
+          },
+          "24-Apr-2023": {
+            "underlying_price": 270.95001220703125
+          },
+          "25-Apr-2023": {
+            "underlying_price": 270.20001220703125
+          },
+          "26-Apr-2023": {
+            "underlying_price": 272.1000061035156
+          },
+          "27-Apr-2023": {
+            "underlying_price": 280.25
+          },
+          "28-Apr-2023": {
+            "underlying_price": 281.8999938964844
+          },
+          "02-May-2023": {
+            "underlying_price": 285.0
+          },
+          "03-May-2023": {
+            "underlying_price": 289.5
+          },
+          "04-May-2023": {
+            "underlying_price": 292.25
+          },
+          "05-May-2023": {
+            "underlying_price": 291.0
+          },
+          "08-May-2023": {
+            "underlying_price": 289.1000061035156
+          },
+          "09-May-2023": {
+            "underlying_price": 291.70001220703125
+          },
+          "10-May-2023": {
+            "underlying_price": 292.3999938964844
+          },
+          "11-May-2023": {
+            "underlying_price": 296.1000061035156
+          },
+          "12-May-2023": {
+            "underlying_price": 277.95001220703125
+          },
+          "15-May-2023": {
+            "underlying_price": 280.3500061035156
+          },
+          "16-May-2023": {
+            "underlying_price": 280.1000061035156
+          },
+          "17-May-2023": {
+            "underlying_price": 280.3999938964844
+          },
+          "18-May-2023": {
+            "underlying_price": 296.04998779296875
+          },
+          "19-May-2023": {
+            "underlying_price": 285.0
+          },
+          "22-May-2023": {
+            "underlying_price": 285.29998779296875
+          },
+          "23-May-2023": {
+            "underlying_price": 295.79998779296875
+          },
+          "24-May-2023": {
+            "underlying_price": 291.8999938964844
+          },
+          "25-May-2023": {
+            "underlying_price": 288.6499938964844
+          },
+          "26-May-2023": {
+            "underlying_price": 290.20001220703125
+          },
+          "29-May-2023": {
+            "underlying_price": 291.04998779296875
+          },
+          "30-May-2023": {
+            "underlying_price": 282.79998779296875
+          },
+          "31-May-2023": {
+            "underlying_price": 293.6499938964844
+          },
+          "01-Jun-2023": {
+            "underlying_price": 292.5
+          },
+          "02-Jun-2023": {
+            "underlying_price": 290.6000061035156
+          },
+          "05-Jun-2023": {
+            "underlying_price": 284.25
+          },
+          "06-Jun-2023": {
+            "underlying_price": 300.54998779296875
+          },
+          "07-Jun-2023": {
+            "underlying_price": 308.8999938964844
+          },
+          "08-Jun-2023": {
+            "underlying_price": 315.3500061035156
+          },
+          "09-Jun-2023": {
+            "underlying_price": 314.8500061035156
+          },
+          "12-Jun-2023": {
+            "underlying_price": 318.3500061035156
+          },
+          "13-Jun-2023": {
+            "underlying_price": 326.8999938964844
+          },
+          "14-Jun-2023": {
+            "underlying_price": 331.75
+          },
+          "15-Jun-2023": {
+            "underlying_price": 332.5
+          },
+          "16-Jun-2023": {
+            "underlying_price": 325.75
+          },
+          "19-Jun-2023": {
+            "underlying_price": 327.20001220703125
+          },
+          "20-Jun-2023": {
+            "underlying_price": 334.0
+          },
+          "21-Jun-2023": {
+            "underlying_price": 333.45001220703125
+          },
+          "22-Jun-2023": {
+            "underlying_price": 327.70001220703125
+          },
+          "23-Jun-2023": {
+            "underlying_price": 324.75
+          },
+          "26-Jun-2023": {
+            "underlying_price": 327.95001220703125
+          },
+          "27-Jun-2023": {
+            "underlying_price": 330.20001220703125
+          },
+          "28-Jun-2023": {
+            "underlying_price": 332.8500061035156
+          },
+          "30-Jun-2023": {
+            "underlying_price": 330.3999938964844
+          },
+          "03-Jul-2023": {
+            "underlying_price": 340.1000061035156
+          },
+          "04-Jul-2023": {
+            "underlying_price": 342.1499938964844
+          },
+          "05-Jul-2023": {
+            "underlying_price": 353.6499938964844
+          },
+          "06-Jul-2023": {
+            "underlying_price": 365.3999938964844
+          },
+          "07-Jul-2023": {
+            "underlying_price": 363.1499938964844
+          },
+          "10-Jul-2023": {
+            "underlying_price": 355.3500061035156
+          },
+          "11-Jul-2023": {
+            "underlying_price": 370.0
+          },
+          "12-Jul-2023": {
+            "underlying_price": 369.6499938964844
+          },
+          "13-Jul-2023": {
+            "underlying_price": 360.70001220703125
+          },
+          "14-Jul-2023": {
+            "underlying_price": 364.6000061035156
+          },
+          "17-Jul-2023": {
+            "underlying_price": 359.54998779296875
+          },
+          "18-Jul-2023": {
+            "underlying_price": 350.20001220703125
+          },
+          "19-Jul-2023": {
+            "underlying_price": 367.29998779296875
+          },
+          "20-Jul-2023": {
+            "underlying_price": 367.54998779296875
+          },
+          "21-Jul-2023": {
+            "underlying_price": 371.6499938964844
+          },
+          "24-Jul-2023": {
+            "underlying_price": 360.1499938964844
+          },
+          "25-Jul-2023": {
+            "underlying_price": 372.1499938964844
+          },
+          "26-Jul-2023": {
+            "underlying_price": 376.29998779296875
+          },
+          "27-Jul-2023": {
+            "underlying_price": 381.1000061035156
+          },
+          "28-Jul-2023": {
+            "underlying_price": 393.79998779296875
+          },
+          "31-Jul-2023": {
+            "underlying_price": 400.95001220703125
+          },
+          "01-Aug-2023": {
+            "underlying_price": 401.45001220703125
+          },
+          "02-Aug-2023": {
+            "underlying_price": 394.6000061035156
+          },
+          "03-Aug-2023": {
+            "underlying_price": 396.3500061035156
+          },
+          "04-Aug-2023": {
+            "underlying_price": 393.1499938964844
+          },
+          "07-Aug-2023": {
+            "underlying_price": 391.8500061035156
+          },
+          "08-Aug-2023": {
+            "underlying_price": 393.45001220703125
+          },
+          "09-Aug-2023": {
+            "underlying_price": 391.3999938964844
+          },
+          "10-Aug-2023": {
+            "underlying_price": 414.1499938964844
+          },
+          "11-Aug-2023": {
+            "underlying_price": 411.45001220703125
+          },
+          "14-Aug-2023": {
+            "underlying_price": 404.0
+          },
+          "16-Aug-2023": {
+            "underlying_price": 415.1000061035156
+          },
+          "17-Aug-2023": {
+            "underlying_price": 408.25
+          },
+          "18-Aug-2023": {
+            "underlying_price": 418.6000061035156
+          },
+          "21-Aug-2023": {
+            "underlying_price": 421.5
+          },
+          "22-Aug-2023": {
+            "underlying_price": 424.70001220703125
+          },
+          "23-Aug-2023": {
+            "underlying_price": 431.29998779296875
+          },
+          "24-Aug-2023": {
+            "underlying_price": 426.79998779296875
+          },
+          "25-Aug-2023": {
+            "underlying_price": 422.3500061035156
+          },
+          "28-Aug-2023": {
+            "underlying_price": 417.3500061035156
+          },
+          "29-Aug-2023": {
+            "underlying_price": 432.70001220703125
+          },
+          "30-Aug-2023": {
+            "underlying_price": 441.95001220703125
+          },
+          "31-Aug-2023": {
+            "underlying_price": 454.6000061035156
+          },
+          "01-Sep-2023": {
+            "underlying_price": 463.6499938964844
+          },
+          "04-Sep-2023": {
+            "underlying_price": 476.1000061035156
+          },
+          "05-Sep-2023": {
+            "underlying_price": 474.75
+          },
+          "06-Sep-2023": {
+            "underlying_price": 476.75
+          },
+          "07-Sep-2023": {
+            "underlying_price": 480.95001220703125
+          },
+          "08-Sep-2023": {
+            "underlying_price": 491.8999938964844
+          },
+          "11-Sep-2023": {
+            "underlying_price": 522.2000122070312
+          },
+          "12-Sep-2023": {
+            "underlying_price": 508.20001220703125
+          },
+          "13-Sep-2023": {
+            "underlying_price": 513.5499877929688
+          },
+          "14-Sep-2023": {
+            "underlying_price": 519.0499877929688
+          },
+          "15-Sep-2023": {
+            "underlying_price": 491.20001220703125
+          },
+          "18-Sep-2023": {
+            "underlying_price": 487.70001220703125
+          },
+          "20-Sep-2023": {
+            "underlying_price": 468.20001220703125
+          },
+          "21-Sep-2023": {
+            "underlying_price": 463.1000061035156
+          },
+          "22-Sep-2023": {
+            "underlying_price": 456.8999938964844
+          },
+          "25-Sep-2023": {
+            "underlying_price": 443.1000061035156
+          },
+          "26-Sep-2023": {
+            "underlying_price": 462.54998779296875
+          },
+          "27-Sep-2023": {
+            "underlying_price": 461.1499938964844
+          },
+          "28-Sep-2023": {
+            "underlying_price": 472.6499938964844
+          },
+          "29-Sep-2023": {
+            "underlying_price": 475.8500061035156
+          },
+          "03-Oct-2023": {
+            "underlying_price": 495.54998779296875
+          },
+          "04-Oct-2023": {
+            "underlying_price": 496.5
+          },
+          "05-Oct-2023": {
+            "underlying_price": 479.75
+          },
+          "06-Oct-2023": {
+            "underlying_price": 476.45001220703125
+          },
+          "09-Oct-2023": {
+            "underlying_price": 460.20001220703125
+          },
+          "10-Oct-2023": {
+            "underlying_price": 464.0
+          },
+          "11-Oct-2023": {
+            "underlying_price": 465.04998779296875
+          },
+          "12-Oct-2023": {
+            "underlying_price": 465.3999938964844
+          },
+          "13-Oct-2023": {
+            "underlying_price": 464.6000061035156
+          },
+          "16-Oct-2023": {
+            "underlying_price": 467.45001220703125
+          },
+          "17-Oct-2023": {
+            "underlying_price": 468.0
+          },
+          "18-Oct-2023": {
+            "underlying_price": 463.29998779296875
+          },
+          "19-Oct-2023": {
+            "underlying_price": 450.0
+          },
+          "20-Oct-2023": {
+            "underlying_price": 469.0
+          },
+          "23-Oct-2023": {
+            "underlying_price": 452.95001220703125
+          },
+          "25-Oct-2023": {
+            "underlying_price": 454.8500061035156
+          },
+          "26-Oct-2023": {
+            "underlying_price": 445.45001220703125
+          },
+          "27-Oct-2023": {
+            "underlying_price": 449.8999938964844
+          },
+          "30-Oct-2023": {
+            "underlying_price": 447.5
+          },
+          "31-Oct-2023": {
+            "underlying_price": 442.54998779296875
+          },
+          "01-Nov-2023": {
+            "underlying_price": 447.75
+          },
+          "02-Nov-2023": {
+            "underlying_price": 442.45001220703125
+          },
+          "03-Nov-2023": {
+            "underlying_price": 443.54998779296875
+          },
+          "06-Nov-2023": {
+            "underlying_price": 447.04998779296875
+          },
+          "07-Nov-2023": {
+            "underlying_price": 452.45001220703125
+          },
+          "08-Nov-2023": {
+            "underlying_price": 468.0
+          },
+          "09-Nov-2023": {
+            "underlying_price": 460.20001220703125
+          },
+          "10-Nov-2023": {
+            "underlying_price": 474.6000061035156
+          },
+          "13-Nov-2023": {
+            "underlying_price": 485.70001220703125
+          },
+          "15-Nov-2023": {
+            "underlying_price": 471.20001220703125
+          },
+          "16-Nov-2023": {
+            "underlying_price": 477.25
+          },
+          "17-Nov-2023": {
+            "underlying_price": 506.8500061035156
+          },
+          "20-Nov-2023": {
+            "underlying_price": 529.5999755859375
+          },
+          "21-Nov-2023": {
+            "underlying_price": 532.75
+          },
+          "22-Nov-2023": {
+            "underlying_price": 504.3500061035156
+          },
+          "23-Nov-2023": {
+            "underlying_price": 523.7000122070312
+          },
+          "24-Nov-2023": {
+            "underlying_price": 542.5499877929688
+          },
+          "28-Nov-2023": {
+            "underlying_price": 522.7000122070312
+          },
+          "29-Nov-2023": {
+            "underlying_price": 513.4000244140625
+          },
+          "30-Nov-2023": {
+            "underlying_price": 501.29998779296875
+          },
+          "01-Dec-2023": {
+            "underlying_price": 517.0999755859375
+          },
+          "04-Dec-2023": {
+            "underlying_price": 523.2999877929688
+          },
+          "05-Dec-2023": {
+            "underlying_price": 541.5999755859375
+          },
+          "06-Dec-2023": {
+            "underlying_price": 536.5
+          },
+          "07-Dec-2023": {
+            "underlying_price": 531.0999755859375
+          },
+          "08-Dec-2023": {
+            "underlying_price": 540.2000122070312
+          },
+          "11-Dec-2023": {
+            "underlying_price": 544.2000122070312
+          },
+          "12-Dec-2023": {
+            "underlying_price": 542.9000244140625
+          },
+          "13-Dec-2023": {
+            "underlying_price": 559.2999877929688
+          },
+          "14-Dec-2023": {
+            "underlying_price": 548.0
+          },
+          "15-Dec-2023": {
+            "underlying_price": 543.9000244140625
+          },
+          "18-Dec-2023": {
+            "underlying_price": 560.25
+          },
+          "19-Dec-2023": {
+            "underlying_price": 544.0999755859375
+          },
+          "20-Dec-2023": {
+            "underlying_price": 521.4500122070312
+          },
+          "21-Dec-2023": {
+            "underlying_price": 539.0
+          },
+          "22-Dec-2023": {
+            "underlying_price": 549.0999755859375
+          },
+          "26-Dec-2023": {
+            "underlying_price": 557.1500244140625
+          },
+          "27-Dec-2023": {
+            "underlying_price": 559.2999877929688
+          },
+          "28-Dec-2023": {
+            "underlying_price": 571.2999877929688
+          },
+          "29-Dec-2023": {
+            "underlying_price": 572.0999755859375
+          },
+          "01-Jan-2024": {
+            "underlying_price": 573.5
+          },
+          "02-Jan-2024": {
+            "underlying_price": 596.2999877929688
+          },
+          "03-Jan-2024": {
+            "underlying_price": 597.0499877929688
+          },
+          "04-Jan-2024": {
+            "underlying_price": 601.4000244140625
+          },
+          "05-Jan-2024": {
+            "underlying_price": 606.2000122070312
+          },
+          "08-Jan-2024": {
+            "underlying_price": 607.3499755859375
+          },
+          "09-Jan-2024": {
+            "underlying_price": 617.3499755859375
+          },
+          "10-Jan-2024": {
+            "underlying_price": 615.7999877929688
+          },
+          "11-Jan-2024": {
+            "underlying_price": 613.9000244140625
+          },
+          "12-Jan-2024": {
+            "underlying_price": 610.8499755859375
+          },
+          "15-Jan-2024": {
+            "underlying_price": 590.1500244140625
+          },
+          "16-Jan-2024": {
+            "underlying_price": 604.5999755859375
+          },
+          "17-Jan-2024": {
+            "underlying_price": 583.9000244140625
+          },
+          "18-Jan-2024": {
+            "underlying_price": 567.2999877929688
+          },
+          "19-Jan-2024": {
+            "underlying_price": 582.6500244140625
+          },
+          "23-Jan-2024": {
+            "underlying_price": 529.9500122070312
+          },
+          "24-Jan-2024": {
+            "underlying_price": 548.5
+          },
+          "25-Jan-2024": {
+            "underlying_price": 538.3499755859375
+          },
+          "29-Jan-2024": {
+            "underlying_price": 553.0
+          },
+          "30-Jan-2024": {
+            "underlying_price": 571.8499755859375
+          },
+          "31-Jan-2024": {
+            "underlying_price": 576.7999877929688
+          },
+          "01-Feb-2024": {
+            "underlying_price": 564.5999755859375
+          },
+          "02-Feb-2024": {
+            "underlying_price": 596.5499877929688
+          },
+          "05-Feb-2024": {
+            "underlying_price": 606.5999755859375
+          },
+          "06-Feb-2024": {
+            "underlying_price": 616.0999755859375
+          },
+          "07-Feb-2024": {
+            "underlying_price": 628.9500122070312
+          },
+          "08-Feb-2024": {
+            "underlying_price": 627.6500244140625
+          },
+          "09-Feb-2024": {
+            "underlying_price": 607.3499755859375
+          },
+          "12-Feb-2024": {
+            "underlying_price": 590.25
+          },
+          "13-Feb-2024": {
+            "underlying_price": 575.2000122070312
+          },
+          "14-Feb-2024": {
+            "underlying_price": 568.5999755859375
+          },
+          "15-Feb-2024": {
+            "underlying_price": 599.25
+          },
+          "16-Feb-2024": {
+            "underlying_price": 631.25
+          },
+          "19-Feb-2024": {
+            "underlying_price": 635.7999877929688
+          },
+          "20-Feb-2024": {
+            "underlying_price": 642.8499755859375
+          },
+          "21-Feb-2024": {
+            "underlying_price": 637.9000244140625
+          },
+          "22-Feb-2024": {
+            "underlying_price": 642.3499755859375
+          },
+          "23-Feb-2024": {
+            "underlying_price": 642.7999877929688
+          },
+          "26-Feb-2024": {
+            "underlying_price": 662.25
+          },
+          "27-Feb-2024": {
+            "underlying_price": 663.2000122070312
+          },
+          "28-Feb-2024": {
+            "underlying_price": 660.0999755859375
+          },
+          "29-Feb-2024": {
+            "underlying_price": 640.5499877929688
+          },
+          "01-Mar-2024": {
+            "underlying_price": 650.3499755859375
+          },
+          "04-Mar-2024": {
+            "underlying_price": 681.9000244140625
+          },
+          "05-Mar-2024": {
+            "underlying_price": 684.7000122070312
+          },
+          "06-Mar-2024": {
+            "underlying_price": 699.0999755859375
+          },
+          "07-Mar-2024": {
+            "underlying_price": 691.75
+          },
+          "11-Mar-2024": {
+            "underlying_price": 688.2999877929688
+          },
+          "12-Mar-2024": {
+            "underlying_price": 658.25
+          },
+          "13-Mar-2024": {
+            "underlying_price": 618.75
+          },
+          "14-Mar-2024": {
+            "underlying_price": 657.9000244140625
+          },
+          "15-Mar-2024": {
+            "underlying_price": 664.5499877929688
+          },
+          "18-Mar-2024": {
+            "underlying_price": 671.7000122070312
+          },
+          "19-Mar-2024": {
+            "underlying_price": 667.4000244140625
+          },
+          "20-Mar-2024": {
+            "underlying_price": 663.6500244140625
+          },
+          "21-Mar-2024": {
+            "underlying_price": 680.7000122070312
+          },
+          "22-Mar-2024": {
+            "underlying_price": 693.0499877929688
+          },
+          "26-Mar-2024": {
+            "underlying_price": 709.7000122070312
+          },
+          "27-Mar-2024": {
+            "underlying_price": 702.8499755859375
+          },
+          "28-Mar-2024": {
+            "underlying_price": 694.4500122070312
+          },
+          "01-Apr-2024": {
+            "underlying_price": 719.5499877929688
+          },
+          "02-Apr-2024": {
+            "underlying_price": 715.7999877929688
+          },
+          "03-Apr-2024": {
+            "underlying_price": 713.3499755859375
+          },
+          "04-Apr-2024": {
+            "underlying_price": 707.25
+          },
+          "05-Apr-2024": {
+            "underlying_price": 702.7999877929688
+          },
+          "08-Apr-2024": {
+            "underlying_price": 703.2000122070312
+          },
+          "09-Apr-2024": {
+            "underlying_price": 698.9500122070312
+          },
+          "10-Apr-2024": {
+            "underlying_price": 698.4000244140625
+          },
+          "12-Apr-2024": {
+            "underlying_price": 682.9000244140625
+          },
+          "15-Apr-2024": {
+            "underlying_price": 693.7999877929688
+          },
+          "16-Apr-2024": {
+            "underlying_price": 673.4500122070312
+          },
+          "18-Apr-2024": {
+            "underlying_price": 674.9000244140625
+          },
+          "19-Apr-2024": {
+            "underlying_price": 692.5999755859375
+          },
+          "22-Apr-2024": {
+            "underlying_price": 712.6500244140625
+          },
+          "23-Apr-2024": {
+            "underlying_price": 724.8499755859375
+          },
+          "24-Apr-2024": {
+            "underlying_price": 737.75
+          },
+          "25-Apr-2024": {
+            "underlying_price": 729.7000122070312
+          },
+          "26-Apr-2024": {
+            "underlying_price": 701.1500244140625
+          },
+          "29-Apr-2024": {
+            "underlying_price": 699.8499755859375
+          },
+          "30-Apr-2024": {
+            "underlying_price": 706.9500122070312
+          },
+          "02-May-2024": {
+            "underlying_price": 734.2000122070312
+          },
+          "03-May-2024": {
+            "underlying_price": 732.8499755859375
+          },
+          "06-May-2024": {
+            "underlying_price": 722.0999755859375
+          },
+          "07-May-2024": {
+            "underlying_price": 700.8499755859375
+          },
+          "08-May-2024": {
+            "underlying_price": 693.5999755859375
+          },
+          "09-May-2024": {
+            "underlying_price": 679.5
+          },
+          "10-May-2024": {
+            "underlying_price": 687.6500244140625
+          },
+          "13-May-2024": {
+            "underlying_price": 680.0999755859375
+          },
+          "14-May-2024": {
+            "underlying_price": 711.5999755859375
+          },
+          "15-May-2024": {
+            "underlying_price": 682.8499755859375
+          },
+          "16-May-2024": {
+            "underlying_price": 683.75
+          },
+          "17-May-2024": {
+            "underlying_price": 707.0999755859375
+          },
+          "21-May-2024": {
+            "underlying_price": 701.5499877929688
+          },
+          "22-May-2024": {
+            "underlying_price": 707.0
+          },
+          "23-May-2024": {
+            "underlying_price": 713.5999755859375
+          },
+          "24-May-2024": {
+            "underlying_price": 705.2999877929688
+          },
+          "27-May-2024": {
+            "underlying_price": 722.4000244140625
+          },
+          "28-May-2024": {
+            "underlying_price": 714.0999755859375
+          },
+          "29-May-2024": {
+            "underlying_price": 711.5499877929688
+          },
+          "30-May-2024": {
+            "underlying_price": 707.6500244140625
+          },
+          "31-May-2024": {
+            "underlying_price": 793.5
+          },
+          "03-Jun-2024": {
+            "underlying_price": 803.3499755859375
+          },
+          "04-Jun-2024": {
+            "underlying_price": 758.6500244140625
+          },
+          "05-Jun-2024": {
+            "underlying_price": 776.2000122070312
+          },
+          "06-Jun-2024": {
+            "underlying_price": 794.4500122070312
+          },
+          "07-Jun-2024": {
+            "underlying_price": 794.9000244140625
+          },
+          "10-Jun-2024": {
+            "underlying_price": 813.9000244140625
+          },
+          "11-Jun-2024": {
+            "underlying_price": 797.25
+          },
+          "12-Jun-2024": {
+            "underlying_price": 823.6500244140625
+          },
+          "13-Jun-2024": {
+            "underlying_price": 816.2000122070312
+          },
+          "14-Jun-2024": {
+            "underlying_price": 812.4000244140625
+          },
+          "18-Jun-2024": {
+            "underlying_price": 809.2999877929688
+          },
+          "19-Jun-2024": {
+            "underlying_price": 793.7999877929688
+          },
+          "20-Jun-2024": {
+            "underlying_price": 808.6500244140625
+          },
+          "21-Jun-2024": {
+            "underlying_price": 791.0999755859375
+          },
+          "24-Jun-2024": {
+            "underlying_price": 800.9000244140625
+          },
+          "25-Jun-2024": {
+            "underlying_price": 811.9500122070312
+          },
+          "26-Jun-2024": {
+            "underlying_price": 813.2000122070312
+          },
+          "27-Jun-2024": {
+            "underlying_price": 803.2999877929688
+          },
+          "28-Jun-2024": {
+            "underlying_price": 822.5
+          },
+          "01-Jul-2024": {
+            "underlying_price": 811.2999877929688
+          },
+          "02-Jul-2024": {
+            "underlying_price": 815.0
+          },
+          "03-Jul-2024": {
+            "underlying_price": 824.7000122070312
+          },
+          "04-Jul-2024": {
+            "underlying_price": 833.6500244140625
+          },
+          "05-Jul-2024": {
+            "underlying_price": 827.7999877929688
+          },
+          "08-Jul-2024": {
+            "underlying_price": 820.2000122070312
+          },
+          "09-Jul-2024": {
+            "underlying_price": 810.4500122070312
+          },
+          "10-Jul-2024": {
+            "underlying_price": 794.1500244140625
+          },
+          "11-Jul-2024": {
+            "underlying_price": 787.6500244140625
+          },
+          "12-Jul-2024": {
+            "underlying_price": 783.2999877929688
+          },
+          "15-Jul-2024": {
+            "underlying_price": 789.4500122070312
+          },
+          "16-Jul-2024": {
+            "underlying_price": 798.0499877929688
+          },
+          "18-Jul-2024": {
+            "underlying_price": 795.0999755859375
+          },
+          "19-Jul-2024": {
+            "underlying_price": 745.2999877929688
+          },
+          "22-Jul-2024": {
+            "underlying_price": 748.5999755859375
+          },
+          "23-Jul-2024": {
+            "underlying_price": 733.9500122070312
+          },
+          "24-Jul-2024": {
+            "underlying_price": 752.5
+          },
+          "25-Jul-2024": {
+            "underlying_price": 748.8499755859375
+          },
+          "26-Jul-2024": {
+            "underlying_price": 764.5
+          },
+          "29-Jul-2024": {
+            "underlying_price": 739.4500122070312
+          },
+          "30-Jul-2024": {
+            "underlying_price": 744.5999755859375
+          },
+          "31-Jul-2024": {
+            "underlying_price": 740.5
+          },
+          "01-Aug-2024": {
+            "underlying_price": 736.3499755859375
+          },
+          "02-Aug-2024": {
+            "underlying_price": 729.75
+          },
+          "05-Aug-2024": {
+            "underlying_price": 677.1500244140625
+          },
+          "06-Aug-2024": {
+            "underlying_price": 659.8499755859375
+          },
+          "07-Aug-2024": {
+            "underlying_price": 678.25
+          },
+          "08-Aug-2024": {
+            "underlying_price": 663.7000122070312
+          },
+          "09-Aug-2024": {
+            "underlying_price": 664.75
+          },
+          "12-Aug-2024": {
+            "underlying_price": 681.2999877929688
+          },
+          "13-Aug-2024": {
+            "underlying_price": 694.25
+          },
+          "14-Aug-2024": {
+            "underlying_price": 695.9000244140625
+          },
+          "16-Aug-2024": {
+            "underlying_price": 701.3499755859375
+          },
+          "19-Aug-2024": {
+            "underlying_price": 723.1500244140625
+          },
+          "20-Aug-2024": {
+            "underlying_price": 740.4500122070312
+          },
+          "21-Aug-2024": {
+            "underlying_price": 743.8499755859375
+          },
+          "22-Aug-2024": {
+            "underlying_price": 729.75
+          },
+          "23-Aug-2024": {
+            "underlying_price": 730.7999877929688
+          },
+          "26-Aug-2024": {
+            "underlying_price": 742.8499755859375
+          },
+          "27-Aug-2024": {
+            "underlying_price": 736.5999755859375
+          },
+          "28-Aug-2024": {
+            "underlying_price": 729.1500244140625
+          },
+          "29-Aug-2024": {
+            "underlying_price": 736.1500244140625
+          },
+          "30-Aug-2024": {
+            "underlying_price": 793.4000244140625
+          },
+          "02-Sep-2024": {
+            "underlying_price": 739.3499755859375
+          },
+          "03-Sep-2024": {
+            "underlying_price": 726.2999877929688
+          },
+          "04-Sep-2024": {
+            "underlying_price": 727.1500244140625
+          },
+          "05-Sep-2024": {
+            "underlying_price": 719.6500244140625
+          },
+          "06-Sep-2024": {
+            "underlying_price": 726.0499877929688
+          },
+          "09-Sep-2024": {
+            "underlying_price": 720.7000122070312
+          },
+          "10-Sep-2024": {
+            "underlying_price": 742.4500122070312
+          },
+          "11-Sep-2024": {
+            "underlying_price": 733.7000122070312
+          },
+          "12-Sep-2024": {
+            "underlying_price": 750.1500244140625
+          },
+          "13-Sep-2024": {
+            "underlying_price": 762.9500122070312
+          },
+          "16-Sep-2024": {
+            "underlying_price": 759.4500122070312
+          },
+          "17-Sep-2024": {
+            "underlying_price": 756.4000244140625
+          },
+          "18-Sep-2024": {
+            "underlying_price": 749.9000244140625
+          },
+          "19-Sep-2024": {
+            "underlying_price": 734.4000244140625
+          },
+          "20-Sep-2024": {
+            "underlying_price": 776.7000122070312
+          },
+          "23-Sep-2024": {
+            "underlying_price": 772.4000244140625
+          },
+          "24-Sep-2024": {
+            "underlying_price": 785.5499877929688
+          },
+          "25-Sep-2024": {
+            "underlying_price": 790.0999755859375
+          },
+          "26-Sep-2024": {
+            "underlying_price": 781.7999877929688
+          },
+          "27-Sep-2024": {
+            "underlying_price": 779.4500122070312
+          },
+          "30-Sep-2024": {
+            "underlying_price": 790.5
+          },
+          "01-Oct-2024": {
+            "underlying_price": 767.4000244140625
+          },
+          "03-Oct-2024": {
+            "underlying_price": 771.5499877929688
+          },
+          "04-Oct-2024": {
+            "underlying_price": 778.5
+          },
+          "07-Oct-2024": {
+            "underlying_price": 758.5
+          },
+          "08-Oct-2024": {
+            "underlying_price": 751.75
+          },
+          "09-Oct-2024": {
+            "underlying_price": 743.5499877929688
+          },
+          "10-Oct-2024": {
+            "underlying_price": 756.0499877929688
+          },
+          "11-Oct-2024": {
+            "underlying_price": 754.4500122070312
+          },
+          "14-Oct-2024": {
+            "underlying_price": 752.0499877929688
+          },
+          "15-Oct-2024": {
+            "underlying_price": 757.0999755859375
+          },
+          "16-Oct-2024": {
+            "underlying_price": 763.75
+          },
+          "17-Oct-2024": {
+            "underlying_price": 760.5
+          },
+          "18-Oct-2024": {
+            "underlying_price": 742.9500122070312
+          },
+          "21-Oct-2024": {
+            "underlying_price": 698.8499755859375
+          },
+          "22-Oct-2024": {
+            "underlying_price": 653.5
+          },
+          "23-Oct-2024": {
+            "underlying_price": 658.9500122070312
+          },
+          "24-Oct-2024": {
+            "underlying_price": 663.0999755859375
+          },
+          "25-Oct-2024": {
+            "underlying_price": 663.9500122070312
+          },
+          "28-Oct-2024": {
+            "underlying_price": 669.5
+          },
+          "29-Oct-2024": {
+            "underlying_price": 683.5
+          },
+          "30-Oct-2024": {
+            "underlying_price": 679.0499877929688
+          },
+          "31-Oct-2024": {
+            "underlying_price": 675.2999877929688
+          },
+          "01-Nov-2024": {
+            "underlying_price": 682.25
+          },
+          "04-Nov-2024": {
+            "underlying_price": 684.0
+          },
+          "05-Nov-2024": {
+            "underlying_price": 689.9000244140625
+          },
+          "06-Nov-2024": {
+            "underlying_price": 716.5499877929688
+          },
+          "07-Nov-2024": {
+            "underlying_price": 723.0499877929688
+          },
+          "08-Nov-2024": {
+            "underlying_price": 710.2999877929688
+          },
+          "11-Nov-2024": {
+            "underlying_price": 705.0499877929688
+          },
+          "12-Nov-2024": {
+            "underlying_price": 698.0999755859375
+          },
+          "13-Nov-2024": {
+            "underlying_price": 692.0999755859375
+          },
+          "14-Nov-2024": {
+            "underlying_price": 694.5499877929688
+          },
+          "18-Nov-2024": {
+            "underlying_price": 688.9500122070312
+          },
+          "19-Nov-2024": {
+            "underlying_price": 686.0
+          },
+          "21-Nov-2024": {
+            "underlying_price": 655.3499755859375
+          },
+          "22-Nov-2024": {
+            "underlying_price": 671.5499877929688
+          },
+          "25-Nov-2024": {
+            "underlying_price": 672.3499755859375
+          },
+          "26-Nov-2024": {
+            "underlying_price": 688.7000122070312
+          },
+          "27-Nov-2024": {
+            "underlying_price": 686.1500244140625
+          },
+          "28-Nov-2024": {
+            "underlying_price": 696.0
+          },
+          "29-Nov-2024": {
+            "underlying_price": 683.2000122070312
+          },
+          "02-Dec-2024": {
+            "underlying_price": 691.75
+          },
+          "03-Dec-2024": {
+            "underlying_price": 716.0499877929688
+          },
+          "04-Dec-2024": {
+            "underlying_price": 734.0
+          },
+          "05-Dec-2024": {
+            "underlying_price": 728.8499755859375
+          },
+          "06-Dec-2024": {
+            "underlying_price": 741.5999755859375
+          },
+          "09-Dec-2024": {
+            "underlying_price": 747.0499877929688
+          },
+          "10-Dec-2024": {
+            "underlying_price": 746.6500244140625
+          },
+          "11-Dec-2024": {
+            "underlying_price": 747.0999755859375
+          },
+          "12-Dec-2024": {
+            "underlying_price": 752.6500244140625
+          },
+          "13-Dec-2024": {
+            "underlying_price": 760.2999877929688
+          },
+          "16-Dec-2024": {
+            "underlying_price": 750.2000122070312
+          },
+          "17-Dec-2024": {
+            "underlying_price": 743.5
+          },
+          "18-Dec-2024": {
+            "underlying_price": 739.0
+          },
+          "19-Dec-2024": {
+            "underlying_price": 739.2000122070312
+          },
+          "20-Dec-2024": {
+            "underlying_price": 719.7999877929688
+          },
+          "23-Dec-2024": {
+            "underlying_price": 728.0
+          },
+          "24-Dec-2024": {
+            "underlying_price": 730.0499877929688
+          },
+          "26-Dec-2024": {
+            "underlying_price": 733.8499755859375
+          },
+          "27-Dec-2024": {
+            "underlying_price": 736.0
+          },
+          "30-Dec-2024": {
+            "underlying_price": 686.9000244140625
+          },
+          "31-Dec-2024": {
+            "underlying_price": 699.2000122070312
+          },
+          "01-Jan-2025": {
+            "underlying_price": 696.8499755859375
+          },
+          "02-Jan-2025": {
+            "underlying_price": 684.4000244140625
+          },
+          "03-Jan-2025": {
+            "underlying_price": 677.5999755859375
+          },
+          "06-Jan-2025": {
+            "underlying_price": 664.1500244140625
+          },
+          "07-Jan-2025": {
+            "underlying_price": 669.0
+          },
+          "08-Jan-2025": {
+            "underlying_price": 645.4500122070312
+          },
+          "09-Jan-2025": {
+            "underlying_price": 632.1500244140625
+          },
+          "10-Jan-2025": {
+            "underlying_price": 625.5499877929688
+          },
+          "13-Jan-2025": {
+            "underlying_price": 606.4000244140625
+          },
+          "14-Jan-2025": {
+            "underlying_price": 625.4500122070312
+          },
+          "15-Jan-2025": {
+            "underlying_price": 615.0499877929688
+          },
+          "16-Jan-2025": {
+            "underlying_price": 625.4000244140625
+          },
+          "17-Jan-2025": {
+            "underlying_price": 634.3499755859375
+          },
+          "20-Jan-2025": {
+            "underlying_price": 627.5499877929688
+          },
+          "21-Jan-2025": {
+            "underlying_price": 633.0499877929688
+          },
+          "22-Jan-2025": {
+            "underlying_price": 633.4000244140625
+          },
+          "23-Jan-2025": {
+            "underlying_price": 639.75
+          },
+          "24-Jan-2025": {
+            "underlying_price": 634.0999755859375
+          },
+          "27-Jan-2025": {
+            "underlying_price": 622.5999755859375
+          },
+          "28-Jan-2025": {
+            "underlying_price": 614.8499755859375
+          },
+          "29-Jan-2025": {
+            "underlying_price": 637.7000122070312
+          },
+          "30-Jan-2025": {
+            "underlying_price": 648.8499755859375
+          },
+          "31-Jan-2025": {
+            "underlying_price": 653.2999877929688
+          },
+          "01-Feb-2025": {
+            "underlying_price": 624.1500244140625
+          },
+          "03-Feb-2025": {
+            "underlying_price": 595.0
+          },
+          "04-Feb-2025": {
+            "underlying_price": 622.5499877929688
+          },
+          "05-Feb-2025": {
+            "underlying_price": 634.7000122070312
+          },
+          "06-Feb-2025": {
+            "underlying_price": 636.2000122070312
+          },
+          "07-Feb-2025": {
+            "underlying_price": 642.0999755859375
+          },
+          "10-Feb-2025": {
+            "underlying_price": 633.25
+          },
+          "11-Feb-2025": {
+            "underlying_price": 608.4500122070312
+          },
+          "12-Feb-2025": {
+            "underlying_price": 603.1500244140625
+          },
+          "13-Feb-2025": {
+            "underlying_price": 608.75
+          },
+          "14-Feb-2025": {
+            "underlying_price": 584.8499755859375
+          },
+          "17-Feb-2025": {
+            "underlying_price": 590.2999877929688
+          },
+          "18-Feb-2025": {
+            "underlying_price": 582.75
+          },
+          "19-Feb-2025": {
+            "underlying_price": 602.5499877929688
+          },
+          "20-Feb-2025": {
+            "underlying_price": 618.7000122070312
+          },
+          "21-Feb-2025": {
+            "underlying_price": 625.5999755859375
+          },
+          "24-Feb-2025": {
+            "underlying_price": 615.9000244140625
+          },
+          "25-Feb-2025": {
+            "underlying_price": 599.4000244140625
+          },
+          "27-Feb-2025": {
+            "underlying_price": 596.5499877929688
+          },
+          "28-Feb-2025": {
+            "underlying_price": 584.8499755859375
+          },
+          "03-Mar-2025": {
+            "underlying_price": 594.8499755859375
+          },
+          "04-Mar-2025": {
+            "underlying_price": 594.3499755859375
+          },
+          "05-Mar-2025": {
+            "underlying_price": 613.4500122070312
+          },
+          "06-Mar-2025": {
+            "underlying_price": 651.9000244140625
+          },
+          "07-Mar-2025": {
+            "underlying_price": 654.5999755859375
+          },
+          "10-Mar-2025": {
+            "underlying_price": 640.5999755859375
+          },
+          "11-Mar-2025": {
+            "underlying_price": 649.3499755859375
+          },
+          "12-Mar-2025": {
+            "underlying_price": 637.0999755859375
+          },
+          "13-Mar-2025": {
+            "underlying_price": 632.2999877929688
+          },
+          "17-Mar-2025": {
+            "underlying_price": 641.5999755859375
+          },
+          "18-Mar-2025": {
+            "underlying_price": 641.5999755859375
+          },
+          "19-Mar-2025": {
+            "underlying_price": 655.3499755859375
+          },
+          "20-Mar-2025": {
+            "underlying_price": 654.0499877929688
+          },
+          "21-Mar-2025": {
+            "underlying_price": 625.7000122070312
+          },
+          "24-Mar-2025": {
+            "underlying_price": 591.3499755859375
+          },
+          "25-Mar-2025": {
+            "underlying_price": 588.1500244140625
+          },
+          "26-Mar-2025": {
+            "underlying_price": 595.1500244140625
+          },
+          "27-Mar-2025": {
+            "underlying_price": 581.9500122070312
+          },
+          "28-Mar-2025": {
+            "underlying_price": 581.5999755859375
+          },
+          "01-Apr-2025": {
+            "underlying_price": 576.5499877929688
+          },
+          "02-Apr-2025": {
+            "underlying_price": 589.9000244140625
+          },
+          "03-Apr-2025": {
+            "underlying_price": 594.5999755859375
+          },
+          "04-Apr-2025": {
+            "underlying_price": 551.7000122070312
+          },
+          "07-Apr-2025": {
+            "underlying_price": 516.6500244140625
+          },
+          "08-Apr-2025": {
+            "underlying_price": 523.3499755859375
+          },
+          "09-Apr-2025": {
+            "underlying_price": 512.5999755859375
+          },
+          "11-Apr-2025": {
+            "underlying_price": 542.0499877929688
+          },
+          "15-Apr-2025": {
+            "underlying_price": 557.7999877929688
+          },
+          "16-Apr-2025": {
+            "underlying_price": 558.7000122070312
+          },
+          "17-Apr-2025": {
+            "underlying_price": 561.4500122070312
+          }
+        }
+      }
+    }
+  }
+}
