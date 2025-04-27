@@ -5,6 +5,12 @@
         "exchange": "NSE",
         "segment": "Equity",
         "timestamps": {
+          "17-Apr-2020": {
+            "underlying_price": 95.5
+          },
+          "20-Apr-2020": {
+            "underlying_price": 98.9000015258789
+          },
           "21-Apr-2020": {
             "underlying_price": 97.30000305175781
           },
@@ -3718,6 +3724,21 @@
           },
           "17-Apr-2025": {
             "underlying_price": 364.0
+          },
+          "21-Apr-2025": {
+            "underlying_price": 364.54998779296875
+          },
+          "22-Apr-2025": {
+            "underlying_price": 360.25
+          },
+          "23-Apr-2025": {
+            "underlying_price": 363.79998779296875
+          },
+          "24-Apr-2025": {
+            "underlying_price": 363.20001220703125
+          },
+          "25-Apr-2025": {
+            "underlying_price": 356.45001220703125
           }
         }
       }

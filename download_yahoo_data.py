@@ -31,7 +31,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ---- 5‑year date range ----------------------------------------------------- #
 END_TS   = int(time.time())
-START_TS = END_TS - 5 * 365 * 24 * 60 * 60          # five years in seconds
+START_TS = END_TS - 5 * 367 * 24 * 60 * 60          # five (++) years in seconds
 
 # ---- Yahoo Finance request headers ---------------------------------------- #
 HEADERS: Dict[str, str] = {
