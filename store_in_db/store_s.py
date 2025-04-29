@@ -12,7 +12,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
-
+import time
 import numpy as np
 import pandas as pd
 from pandas.errors import ParserError
@@ -129,8 +129,8 @@ def main() -> None:
             date_obj = datetime.strptime(fp.name[2:-8], "%d%b%Y")
             date_key = date_obj.strftime("%d-%b-%Y")
             
-            logging.info("processing %-10s", fp.name)
-
+            if len(time_map) % 100 == 0:
+                logging.info("... %s rows accumulated for %s", len(time_map), sym)
 
             df = _load_bhavcopy(fp)
             if df is None:
@@ -167,7 +167,7 @@ def main() -> None:
                     upcoming_earning_date=None,
                     expiry_30d=None, expiry_60d=None, expiry_90d=None,
                     rv_yz=None, strike_price=None,
-                    ce=None,  pe=None, option_chain=[],
+                    ce={},  pe={}, option_chain=[],
                 ),
             )
 
@@ -218,6 +218,14 @@ def main() -> None:
                 continue
 
             (ce30, ce60, ce90, pe30, pe60, pe90, strike) = picked
+            
+            # ⚠ skip any date whose 30/60/90D bucket is missing
+            if any(x is None for x in (ce30, ce60, ce90, pe30, pe60, pe90, strike)):
+                logging.debug("skip %s – incomplete option chain", date_key)
+                continue
+            
+            
+            
             rec["strike_price"] = strike
 
             T30 = _safe_T(date_key, rec["expiry_30d"])
@@ -312,11 +320,14 @@ def main() -> None:
             if dt in pe_stat:
                 rec["pe"]["ivp"], rec["pe"]["ivr"] = \
                     pe_stat[dt]["ivp"], pe_stat[dt]["ivr"]
+                    
+        logging.info("--> building %s rows for %s, writing to DB …", len(time_map), sym)
 
         if time_map:
             with DBWriter() as w:
                 for d_str, payload in time_map.items():
                     w.write_row(sym, d_str, payload)
+                    
             logging.info("└─ %s rows stored", len(time_map))
         else:
             logging.info("└─ no data rows for %s", sym)
