@@ -1,148 +1,139 @@
-# 📈 NSE Options Data Analysis (2020–2025)
+# 📈 NSE Options Data Analysis Toolkit (2020 – 2025)
 
-This project is built to **analyze NSE (National Stock Exchange) options data** over the past 5 years. It combines historical market data with financial modeling to compute **implied volatility (IV)**, **realized volatility (RV)**, **Black-Scholes Greeks**, **earnings calendar alignment**, and **interest rate integration** for each option.
+A one‑stop, **production‑ready pipeline** for *downloading*, *enriching*, *storing*, and *analysing* five years of NSE derivatives data.
+It fuses Bhavcopy files, Yahoo spot prices, interest‑rate curves, and earnings calendars, then computes IV, RV, Greeks, IV‑percentile / rank, and streams everything straight into **PostgreSQL** (JSONB) or a flat JSON file for ML workflows.
 
-> 📅 **Data Range:** Apr-2020 to Apr-2025  
-> 🛠️ **Primary Use Case:** Quantitative Research, Options Analytics, and AI Training  
-> ⚠️ **Disclaimer:** This is for educational and research use only. Follow NSE’s data policies.
+> 📅 **Coverage** Latest five years from the day you run the scripts
+> 🛠️ **Primary use‑cases** Quant research · Options & volatility dashboards · AI model training
+> ⚠️ **Disclaimer** Educational/research use only. Respect NSE & data‑provider T\&Cs.
 
 ---
 
-## 📁 Project Structure
+## 📁 Project layout
 
 ```
 .
-├── bhavcopy/extracted         # Raw NSE Bhavcopy files
-├── earning_dates/             # Earnings dates (JSON format)
-├── interest_rates/            # MIFOR interest rate CSVs
-├── yahoo_finance/             # Underlying stock prices from Yahoo Finance
-├── processed_data/            # Final enriched dataset output
-├── download_bhavcopy.py       # Downloader for historical bhavcopies
-├── download_yahoo_data.py     # Script to fetch Yahoo historical prices
-├── nse_fno_scripts.py         # Script to generate NSE F&O scripts list
-├── process_data.py            # Main processor to calculate IV, RV, Greeks, etc.
-└── nse_fno_scripts.json       # NSE F&O symbols
+├── bhavcopy/
+│   ├── raw/                    # Downloaded NSE ZIPs
+│   └── extracted/              # Daily CSVs
+├── earning_dates/              # Earnings-calendar JSON
+├── interest_rates/             # FBIL MIFOR CSV
+├── yahoo_finance/              # Underlying spot-price JSON
+├── processed_data/             # Final merged dataset
+├── store_in_db/                # ➜ bulk ETL into Postgres
+│   ├── store_s.py              # multi‑threaded ETL driver
+│   └── db_util.py              # connection‑pool & batch‑upsert
+├── interactive_view/           # Optional HTML/JS plots
+├── scripts/
+│   ├── download_bhavcopy.py
+│   ├── download_yahoo_data.py
+│   ├── nse_fno_scripts.py
+│   └── utilities.py
+├── process_data.py             # stand‑alone JSON pipeline
+├── nse_fno_scripts.json
+├── top_nse_fno_scripts.json
+├── nse_options_formulae.pdf    # maths reference
+├── requirements.txt
+└── README.md   ← you are here
 ```
 
----
-
-## ✨ Key Features
-
-- 📅 **5 Years of Options Data** with expiry tracking (30d/60d/90d)
-- 📈 **Implied Volatility (IV)** via Black-Scholes & bisection method
-- 📉 **Realized Volatility (RV)** using **Yang-Zhang model**
-- 🧮 **Greeks Calculation**: Delta, Gamma, Theta, Vega, Rho
-- 💡 **IV Percentile & Rank** (30-day rolling window)
-- 📊 **Interest Rate Fallback Logic** using FBIL MIFOR data
-- 🧠 **AI/ML Ready Output**: structured JSON suitable for training or analytics
-- 📆 **Earnings Date Mapping** from Sensibull API
-- 💾 **Optimized JSON Output** for scalable querying or dashboard integration
+*(macOS users: ignore any auto‑created `__MACOSX/` folders.)*
 
 ---
 
-## ⚙️ Setup & Requirements
+## ✨ Feature highlights
 
-**Python Version:** 3.7+  
-**Dependencies:**
+| Category                | What you get                                                                                                                                                                                                       |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Data ingestion**      | • NSE Bhavcopy (zip → CSV) • Yahoo Finance spot prices • FBIL MIFOR daily rates • Earnings calendar (Sensibull‑style JSON)                                                                                         |
+| **Analytics engine**    | • **Implied volatility** (30 / 60 / 90 d) via Black‑Scholes + bisection • **Realised vol** with Yang‑Zhang • Full **Greeks** (Δ Γ Θ ν ρ) • Rolling 30‑day **IV percentile & rank**                                 |
+| **Index‑aware logic**   | Correct handling of index *weekly* expiries → bins into proper monthly buckets (30/60/90 d).                                                                                                                       |
+| **Storage options**     | 1️⃣ Write enriched JSON to `processed_data/processed_data.json`  2️⃣ (*Recommended*) `store_in_db/store_s.py` bulk‑upserts rows into **PostgreSQL** with JSONB columns, automatic retries, and connection pooling. |
+| **Speed**               | Multithreaded symbol processing; NumPy releases the GIL → linear scaling on CPUs.                                                                                                                                  |
+| **Visualisation hooks** | `interactive_view/` seeds a Plotly/Dash playground; connect directly to the DB or the JSON file.                                                                                                                   |
+| **Documentation**       | `nse_options_formulae.pdf` explains every calculation and assumption.                                                                                                                                              |
+
+---
+
+## ⚙️ Quick‑start
+
+### 0.  Environment
+
 ```bash
-pip install pandas numpy requests pytz python-dateutil beautifulsoup4
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
----
+### 1.  (Optional) refresh the F\&O script list
 
-## 🚀 How to Use
-
-### 1. Download Bhavcopy Files
 ```bash
-python download_bhavcopy.py
+python scripts/nse_fno_scripts.py
 ```
-> ✅ Recent bhavcopies are sourced from [SAMCO Bhavcopy Archive](https://www.samco.in/bhavcopy-nse-bse-mcx)
 
----
+### 2.  Download raw data
 
-### 2. Download Underlying Spot Prices (Yahoo Finance)
+*(Bhavcopies until Apr‑2025 already included; run these only for new dates)*
+
 ```bash
-python download_yahoo_data.py
+python scripts/download_bhavcopy.py       # Bhavcopy ZIPs → CSVs
+python scripts/download_yahoo_data.py     # Underlying spot prices
 ```
-> Downloads `{symbol}_processed.json` for every script in `yahoo_finance/`
 
----
+### 3‑A.  **JSON‑only** pipeline
 
-### 3. Process & Analyze
 ```bash
-python process_data.py
+python process_data.py                    # writes processed_data/processed_data.json
 ```
-> Merges bhavcopy + interest + earnings + spot prices and computes:
-- IV30, IV60, IV90 for CE and PE
-- Realized Volatility (Yang-Zhang)
-- IV Percentile & Rank (30-day rolling)
-- Greeks: Δ, Γ, Θ, ν, ρ
-- Upcoming earnings alignment
 
-Saves results in: `processed_data/processed_data.json`
+### 3‑B.  **PostgreSQL** pipeline (preferred)
+
+1. Create a DB and table `option_metrics` (DDL in `store_in_db/schema.sql`).
+2. Export PG creds as env‑vars **or** set `PG_DSN`.
+3. Run:
+
+   ```bash
+   cd store_in_db
+   python store_s.py                     # multi‑threaded ETL → Postgres
+   ```
+
+*Tunable env‐vars:*
+
+| Var                 | Default | Description                  |
+| ------------------- | ------- | ---------------------------- |
+| `BATCH_SIZE`        | 1000    | rows per bulk upsert         |
+| `PG_SSLMODE`        | require | SSL mode (disable for local) |
+| `MAX_WORKERS`       | auto    | threads = `min(8, CPU)`      |
+| `STATEMENT_TIMEOUT` | 0       | session timeout (ms)         |
 
 ---
 
-## 🧠 Sample Output Format
+## 🧠 Sample JSON snapshot
 
-Path: `processed_data/processed_data.json`
-
-```json
+```jsonc
 {
   "historical": {
     "scripts": {
-      "HDFCBANK": {
-        "exchange": "NSE",
-        "segment": "Options",
-        "09-Apr-2025": {
-          "underlying_price": 1765.0,
-          "interest_rate": 7.7556,
-          "upcoming_earning_date": "19-Apr-2025",
-          "expiry_30d": "24-Apr-2025",
-          "expiry_60d": "29-May-2025",
-          "expiry_90d": "26-Jun-2025",
-          "strike_price": 1760.0,
-          "rv_yz": 12.0535,
+      "NIFTY": {
+        "02-May-2025": {
+          "underlying_price": 22715.2,
+          "interest_rate": 7.78,
+          "upcoming_earning_date": null,
+          "expiry_30d": "29-May-2025",
+          "expiry_60d": "26-Jun-2025",
+          "expiry_90d": "31-Jul-2025",
+          "strike_price": 22700.0,
+          "rv_yz": 11.32,
           "ce": {
-            "iv_30": 21.40,
-            "iv_60": 15.17,
-            "iv_90": 19.60,
-            "volume": 89185,
-            "last_price_30d": 42.4,
-            "open": 45.25,
-            "high": 47.85,
-            "low": 37.25,
-            "close": 42.4,
-            "ivp": 93.33,
-            "ivr": 0.9024,
-            "greeks": {
-              "delta": 0.56,
-              "gamma": 0.0042,
-              "theta": -1.01,
-              "vega": 1.70,
-              "rho": 0.56
-            }
+            "iv_30": 13.4,
+            "iv_60": 14.1,
+            "iv_90": 15.3,
+            "volume": 181492,
+            "ivp": 78.6,
+            "ivr": 62.4,
+            "greeks": { "delta": 0.52, "gamma": 0.0007 }
           },
-          "pe": {
-            "iv_30": 21.59,
-            "iv_60": 20.89,
-            "iv_90": 21.02,
-            "volume": 47362,
-            "last_price_30d": 31.7,
-            "open": 29.5,
-            "high": 37.65,
-            "low": 28.65,
-            "close": 31.7,
-            "ivp": 96.67,
-            "ivr": 0.9496,
-            "greeks": {
-              "delta": -0.44,
-              "gamma": 0.0042,
-              "theta": -0.69,
-              "vega": 1.70,
-              "rho": -0.48
-            }
-          }
+          "pe": { … },
+          "option_chain": [ … 1200 rows … ]
         }
       }
     }
@@ -152,38 +143,67 @@ Path: `processed_data/processed_data.json`
 
 ---
 
-## 📘 Data Sources
+## 🗄️ Database schema (PostgreSQL)
 
-- **NSE Bhavcopy:** [SAMCO Archive](https://www.samco.in/bhavcopy-nse-bse-mcx)
-- **Interest Rates:** [FBIL Adjusted MIFOR](https://www.fbil.org.in/#contentA)
-- **Earnings Dates:** `https://oxide.sensibull.com/v1/compute/market_stock_events`
-- **Underlying Prices:** Yahoo Finance (via `chart` API)
+```sql
+CREATE TABLE option_metrics (
+  symbol              TEXT    NOT NULL,
+  date                DATE    NOT NULL,
+  underlying_price    DOUBLE PRECISION,
+  interest_rate       DOUBLE PRECISION,
+  strike_price        DOUBLE PRECISION,
+  expiry_30d          DATE,
+  expiry_60d          DATE,
+  expiry_90d          DATE,
+  upcoming_earning_date DATE,
+  rv_yz               DOUBLE PRECISION,
+  ce                  JSONB,
+  pe                  JSONB,
+  option_chain        JSONB,
+  extras              JSONB,
+  PRIMARY KEY (symbol, date)
+);
+```
 
----
-
-## 🔮 Future Enhancements
-
-- 🛰️ **Real-time Option Chain** using broker APIs (e.g., Dhan)
-- 🔗 **NoSQL Database Integration** for faster querying
-- 📡 **IV Spike Prediction Model** around earnings
-- 📺 **React/Django Dashboard** to visualize insights
-
----
-
-## 🔐 License
-
-Open for non-commercial research and education only. Please review data source terms from NSE, FBIL, Yahoo, Sensibull, and SAMCO.
-
----
-
-## 👨‍💻 Author
-
-**Sajal Agrawal**  
-Founder, Sajal Tech Solutions Private Limited  
-🌐 [sajaltech.com](https://sajaltech.com) | ✉️ sajal@sajaltech.com | 📞 +91-8440898969
+The ETL performs `INSERT … ON CONFLICT DO UPDATE`, so reruns are idempotent.
 
 ---
 
-## 🤝 Contributions
+## 🔮 Road‑map
 
-Pull requests, forks, and feedback are welcome! Let’s push the frontier of options analytics together 🚀
+* 🌐 Live chain capture via broker WebSockets (Dhan, Zerodha, FYERS)
+* 📈 Real‑time dashboards (Plotly‑Dash & Superset)
+* 🤖 Volatility‑surface fitting & Monte‑Carlo pricers
+* 🏃‍♂️ Streaming pipeline with Apache Airflow + TimescaleDB
+
+---
+
+## 📚 Data sources
+
+| Source                       | Usage                          |
+| ---------------------------- | ------------------------------ |
+| **NSE Bhavcopy**             | Official market snapshot (EOD) |
+| **Yahoo Finance**            | Spot prices for IV calc        |
+| **FBIL MIFOR**               | Daily INR risk‑free proxy      |
+| **Sensibull API / Raw JSON** | Corporate actions & earnings   |
+
+---
+
+## 🔐 Licence
+
+Non‑commercial, research & educational use.
+You **must** comply with upstream providers (NSE, FBIL, Yahoo, etc.) when redistributing or displaying data.
+
+---
+
+## 👤 Author
+
+**Sajal Agrawal** — Founder, Sajal Tech Solutions Pvt Ltd
+🌐 [sajaltech.com](https://sajaltech.com) | ✉ [sajal@sajaltech.com](mailto:sajal@sajaltech.com)
+
+---
+
+## 🤝 Contributing
+
+Bug‑reports, pull‑requests, and feature discussions are warmly welcome.
+Let’s keep pushing the frontier of open‑source options analytics! 🚀
