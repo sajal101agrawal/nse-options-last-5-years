@@ -1,8 +1,8 @@
-'''db_util.py – fast but API-compatible writer for option_metrics
+'''db_util.py – fast but API‑compatible writer for option_metrics
 ────────────────────────────────────────────────────────────────────────
-• *Same* public surface (DBWriter.write_row(sym, date_key, d)) so callers need **zero** edits
-• Buffers rows and bulk-UPSERTs with psycopg2.extras.execute_values() → 5-10 × faster
-• Retries each *batch* up to 3× on transient errors
+• *Same* public surface (DBWriter.write_row(sym, date_key, d)) – callers need **zero** edits
+• Buffers rows and bulk‑UPSERTs with psycopg2.extras.execute_values() → 5‑10 × faster
+• Retries each *batch* up to 6× on transient errors (SSL EOF, bad MAC, etc.)
 • Scrubs NaN/Inf so JSON/JSONB inserts never fail
 '''
 
@@ -20,8 +20,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ─────────────────────────── connection pool ──────────────────────────────
-
+# ───────────────────────────── connection pool ─────────────────────────────
 def _dsn() -> str:
     if dsn := os.getenv("PG_DSN"):
         return dsn
@@ -44,7 +43,7 @@ def _pool() -> pool.SimpleConnectionPool:
     if _POOL is None:
         _POOL = psycopg2.pool.SimpleConnectionPool(
             1,
-            8,  # extra headroom for parallel writers
+            8,  # extra head‑room for multithreaded writers
             dsn=_dsn(),
             connect_timeout=10,
             keepalives=1,
@@ -67,11 +66,9 @@ def _conn():
             except Exception:
                 pass
 
-
-# ───────────────────────────── helpers ────────────────────────────────────
-
+# ───────────────────────────── helper utils ───────────────────────────────
 def _clean(o: Any) -> Any:
-    """Replace NaN / ±Inf recursively so Postgres JSON never rejects the payload."""
+    """Replace NaN/Inf recursively so Postgres JSON never rejects the payload."""
     if isinstance(o, float) and (math.isnan(o) or math.isinf(o)):
         return None
     if isinstance(o, dict):
@@ -82,15 +79,13 @@ def _clean(o: Any) -> Any:
 
 
 def _d(s: str | None) -> date | None:
-    if not s:
-        return None
     try:
-        return datetime.strptime(s, "%d-%b-%Y").date()
+        return datetime.strptime(s, "%d-%b-%Y").date() if s else None
     except Exception:
         return None
 
 
-# UPSERT statement – *execute_values* will expand the VALUES part
+# UPSERT statement – *execute_values* expands the VALUES part
 _INSERT = (
     "INSERT INTO option_metrics ("
     "symbol,date,underlying_price,interest_rate,strike_price,"
@@ -111,37 +106,34 @@ _INSERT = (
     "extras                 = EXCLUDED.extras;"
 )
 
-# ─────────────────────────── writer class (API-compatible) ────────────────
-
-BATCH_SIZE = int(os.getenv("BATCH_SIZE", 1000))  # tune 500–5000 to taste
+# ─────────────────────── writer class (API‑compatible) ─────────────────────
+BATCH_SIZE = int(os.getenv("BATCH_SIZE", 500))   # tune 250‑5000 to taste
+MAX_RETRY  = 6                                    # tolerate flaky networks
 
 
 class DBWriter:
-    """Drop-in replacement that keeps the *same* constructor + write_row signature.
+    """Context‑managed bulk writer.
 
-    Usage is unchanged:
-        with DBWriter() as w:
-            w.write_row(sym, date_key, payload)
-    Flush occurs automatically when the buffer fills or on context-exit.
+    with DBWriter() as w:
+        w.write_row(sym, date_key, payload)   # call multiple times
     """
 
     def __init__(self):
         self._buf: List[Tuple[Any, ...]] = []
 
-    # context-manager helpers ---------------------------------------------
+    # ––––– context helpers –––––
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc, tb):
-        # flush remaining rows even if caller forgot to call close()
+    def __exit__(self, *_):
         try:
             self.close()
         finally:
             return False  # never swallow exceptions
 
-    # public API ----------------------------------------------
-    def write_row(self, sym: str, date_key: str, d: dict) -> None:  # noqa: D401
-        """Buffer a row; bulk-flush when batch is full."""
+    # ––––– public API –––––
+    def write_row(self, sym: str, date_key: str, d: dict) -> None:
+        """Buffer a row; flush automatically when batch is full."""
         self._buf.append(self._build_params(sym, date_key, d))
         if len(self._buf) >= BATCH_SIZE:
             self._flush()
@@ -150,7 +142,7 @@ class DBWriter:
         if self._buf:
             self._flush()
 
-    # internal ------------------------------------------------------------
+    # ––––– internal –––––
     @staticmethod
     def _build_params(sym: str, date_key: str, d: dict) -> Tuple[Any, ...]:
         return (
@@ -175,16 +167,24 @@ class DBWriter:
         while True:
             try:
                 with _conn() as conn, conn.cursor() as cur:
+                    # disable per‑statement timeout for this session
+                    cur.execute("SET statement_timeout = 0")
                     execute_values(cur, _INSERT, self._buf, page_size=BATCH_SIZE)
                     conn.commit()
                 self._buf.clear()
                 return
+
             except (OperationalError, InterfaceError) as e:
+                # drop the poisoned connection so the pool won't hand it out again
+                try:
+                    _pool().putconn(conn, close=True)
+                except Exception:
+                    pass
                 tries += 1
-                if tries > 3:
+                if tries > MAX_RETRY:
                     raise
                 logging.warning(
                     "batch insert failed (%s) – retry %d in %ss", e, tries, wait
                 )
                 time.sleep(wait)
-                wait *= 2
+                wait = min(wait * 2, 30)      # exponential back‑off, cap 30 s
