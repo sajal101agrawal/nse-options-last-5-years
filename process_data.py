@@ -275,69 +275,62 @@ def get_rate_with_fallback(date_obj, daily_interest_map):
 
 def pick_strike_nearest_underlying(underlying, options_data):
     """
-    Among all strikes in options_data, pick the single strike that is closest
-    to the 'underlying' price and is available with both CE & PE for the
-    nearest, next-nearest, and next-to-next-nearest expiry.
-    Returns:
-        ce_row_30d, ce_row_60d, ce_row_90d,
-        pe_row_30d, pe_row_60d, pe_row_90d,
-        chosen_strike
+    Return rows for the strike closest to `underlying` that exists (with both CE & PE)
+    in the *monthly* contracts of the next three months.
+
+    Returns
+    -------
+    (ce30, ce60, ce90, pe30, pe60, pe90, chosen_strike)  or  None
     """
-    if underlying is None or not np.isfinite(underlying): #if underlying is None or not np.isfinite(underlying):
-        return None
-    
-    candidates = []
-
-    # Ensure datetime format
-    options_data = options_data.copy()
-    options_data['EXPIRY_DT'] = pd.to_datetime(options_data['EXPIRY_DT'], errors='coerce')
-    if options_data['EXPIRY_DT'].isnull().all():
+    if underlying is None or not np.isfinite(underlying):
         return None
 
-    # Get first 3 unique expiry dates
-    unique_expiries = sorted(options_data['EXPIRY_DT'].dropna().unique())
-    if len(unique_expiries) < 3:
+    df = options_data.copy()
+    df["EXPIRY_DT"] = pd.to_datetime(df["EXPIRY_DT"], errors="coerce")
+    df = df.dropna(subset=["EXPIRY_DT"])
+    if df.empty:
         return None
 
-    expiry_30d = unique_expiries[0]
-    expiry_60d = unique_expiries[1]
-    expiry_90d = unique_expiries[2]
-
-    data_30d = options_data[options_data['EXPIRY_DT'] == expiry_30d]
-    data_60d = options_data[options_data['EXPIRY_DT'] == expiry_60d]
-    data_90d = options_data[options_data['EXPIRY_DT'] == expiry_90d]
-
-    # Try to find a strike that exists in all 3 expiries and has both CE and PE
-    common_strikes = set(data_30d['STRIKE_PR'].unique()) & \
-                     set(data_60d['STRIKE_PR'].unique()) & \
-                     set(data_90d['STRIKE_PR'].unique())
-
-    for strike_price in common_strikes:
-        strike_price = float(strike_price)
-
-        def get_rows(data, strike):
-            sub = data[data['STRIKE_PR'] == strike]
-            ce = sub[sub['OPTION_TYP'] == 'CE']
-            pe = sub[sub['OPTION_TYP'] == 'PE']
-            return ce.iloc[0] if not ce.empty else None, pe.iloc[0] if not pe.empty else None
-
-        ce_30d, pe_30d = get_rows(data_30d, strike_price)
-        ce_60d, pe_60d = get_rows(data_60d, strike_price)
-        ce_90d, pe_90d = get_rows(data_90d, strike_price)
-
-        diff = abs(strike_price - underlying)
-        candidates.append((diff, strike_price, ce_30d, pe_30d, ce_60d, pe_60d, ce_90d, pe_90d))
-
-    if not candidates:
+    # ── pick the *latest* expiry in each month (monthly contract) ──────────
+    monthly_expiries = (
+        df.groupby(df["EXPIRY_DT"].dt.to_period("M"))["EXPIRY_DT"]
+          .max()
+          .sort_values()
+    )
+    if len(monthly_expiries) < 3:
         return None
 
-    # Sort by closest to underlying
-    # candidates.sort(key=lambda x: x[0])
-    candidates.sort(key=lambda x: (x[0], x[1]))
+    exp30, exp60, exp90 = monthly_expiries.iloc[:3].values
+    buckets = {exp: df[df["EXPIRY_DT"] == exp] for exp in (exp30, exp60, exp90)}
 
-    _, chosen_strike, ce_30d, pe_30d, ce_60d, pe_60d, ce_90d, pe_90d = candidates[0]
+    # ── strikes present in *all* three buckets with both CE & PE ───────────
+    common_strikes = (
+        set(buckets[exp30]["STRIKE_PR"])
+        & set(buckets[exp60]["STRIKE_PR"])
+        & set(buckets[exp90]["STRIKE_PR"])
+    )
+    if not common_strikes:
+        return None
 
-    return ce_30d, ce_60d, ce_90d, pe_30d, pe_60d, pe_90d, chosen_strike
+    # choose the strike nearest to the underlying price
+    chosen_strike = min(common_strikes, key=lambda k: abs(float(k) - underlying))
+
+    def _rows(bucket):
+        ce = bucket[(bucket["STRIKE_PR"] == chosen_strike) & (bucket["OPTION_TYP"] == "CE")]
+        pe = bucket[(bucket["STRIKE_PR"] == chosen_strike) & (bucket["OPTION_TYP"] == "PE")]
+        return (ce.iloc[0] if not ce.empty else None,
+                pe.iloc[0] if not pe.empty else None)
+
+    ce30, pe30 = _rows(buckets[exp30])
+    ce60, pe60 = _rows(buckets[exp60])
+    ce90, pe90 = _rows(buckets[exp90])
+
+    # ensure all six rows are present
+    if any(x is None for x in (ce30, pe30, ce60, pe60, ce90, pe90)):
+        return None
+
+    return ce30, ce60, ce90, pe30, pe60, pe90, float(chosen_strike)
+
 
 
 #############################################################################
