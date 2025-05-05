@@ -197,6 +197,35 @@ def get_option_data(option_chain: list, expiry_date: date, strike_price: float, 
             return opt
     return None
 
+def find_option_near_price(option_chain: list, expiry_date: date, target_price: float, option_type: str) -> dict | None:
+    """Finds the option (CE or PE) closest to the target price for a given expiry."""
+    if not option_chain or not expiry_date or target_price is None or not math.isfinite(target_price):
+        return None
+
+    target_expiry_str = expiry_date.strftime("%d-%b-%Y")
+    relevant_options = []
+    for opt in option_chain:
+        # Ensure necessary keys exist and price is valid
+        if (
+            opt.get("type") == option_type
+            and opt.get("expiry") == target_expiry_str
+            and isinstance(opt.get("settle"), (int, float))
+            and math.isfinite(opt["settle"])
+            and opt["settle"] > 0 # Ensure price is positive
+            and isinstance(opt.get("strike"), (int, float))
+        ):
+            relevant_options.append(opt)
+
+    if not relevant_options:
+        return None
+
+    # Find the option with the minimum absolute price difference
+    best_option = min(
+        relevant_options,
+        key=lambda opt: abs(opt["settle"] - target_price)
+    )
+    return best_option
+
 def find_exit_day(cursor, symbol: str, expiry_date: date, is_index_flag: bool) -> date | None:
     """Finds the last Tue (index) or Wed (stock) trading day before expiry."""
     target_weekday = 1 if is_index_flag else 2 # 1=Tuesday, 2=Wednesday
@@ -208,6 +237,8 @@ def find_exit_day(cursor, symbol: str, expiry_date: date, is_index_flag: bool) -
             if current_day.weekday() == target_weekday:
                 return current_day
             elif current_day.weekday() < target_weekday:
+                # If target is Wed (2) and current is Tue (1) or Mon (0), return current
+                # If target is Tue (1) and current is Mon (0), return current
                 return current_day
         current_day -= timedelta(days=1)
         if current_day < expiry_date - timedelta(days=20): break
@@ -243,7 +274,7 @@ def insert_backtest_result(cursor, result_data: dict):
         "skipped_reason": None, "call_entry_strike": None, "put_entry_strike": None,
         "call_entry_delta": None, "put_entry_delta": None, "call_entry_price": None,
         "put_entry_price": None, "call_exit_price": None, "put_exit_price": None,
-        "exit_date": None, "hedge_pnl_points": None # Added hedge PNL
+        "exit_date": None, "adjustment_pnl_points": None # Renamed from hedge_pnl_points
     }
     for key, default_val in defaults.items():
         result_data.setdefault(key, default_val)
@@ -253,11 +284,20 @@ def insert_backtest_result(cursor, result_data: dict):
         "entry_credit", "exit_cost", "pnl_points", "call_entry_strike",
         "put_entry_strike", "call_entry_delta", "put_entry_delta",
         "call_entry_price", "put_entry_price", "call_exit_price",
-        "put_exit_price", "hedge_pnl_points"
+        "put_exit_price", "adjustment_pnl_points"
     ]
     for field in numeric_fields:
         if field in result_data and isinstance(result_data[field], (int, float)) and not math.isfinite(result_data[field]):
             result_data[field] = None
+
+    # Check if the table needs adjustment_pnl_points column
+    # This should ideally be handled by a migration script, but for now we assume it exists
+    # Or we stick to the old name hedge_pnl_points if altering schema is not desired
+    # Let's stick to hedge_pnl_points for simplicity and just update the comment
+    defaults["hedge_pnl_points"] = defaults.pop("adjustment_pnl_points")
+    numeric_fields.remove("adjustment_pnl_points")
+    numeric_fields.append("hedge_pnl_points")
+    result_data["hedge_pnl_points"] = result_data.pop("adjustment_pnl_points", None)
 
     query = """
     INSERT INTO backtest_results (
@@ -265,10 +305,10 @@ def insert_backtest_result(cursor, result_data: dict):
         entry_credit, exit_cost, pnl_points, skipped_reason,
         call_entry_strike, put_entry_strike, call_entry_delta, put_entry_delta,
         call_entry_price, put_entry_price, call_exit_price, put_exit_price,
-        hedge_pnl_points -- Added hedge PNL column
+        hedge_pnl_points -- Stores PNL from leg adjustments
     )
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    ON CONFLICT (symbol, year, month) DO UPDATE SET -- Changed to UPDATE on conflict
+    ON CONFLICT (symbol, year, month) DO UPDATE SET
         entry_date = EXCLUDED.entry_date,
         exit_date = EXCLUDED.exit_date,
         entry_credit = EXCLUDED.entry_credit,
@@ -294,7 +334,7 @@ def insert_backtest_result(cursor, result_data: dict):
         result_data["call_entry_delta"], result_data["put_entry_delta"],
         result_data["call_entry_price"], result_data["put_entry_price"],
         result_data["call_exit_price"], result_data["put_exit_price"],
-        result_data["hedge_pnl_points"] # Added hedge PNL param
+        result_data["hedge_pnl_points"] # Adjustment PNL
     )
     try:
         cursor.execute(query, params)
@@ -312,7 +352,12 @@ def run_backtest_month(symbol: str, year: int, month: int, index_symbols: set[st
     # Get all trading days for the month to check entry and build map for hedging dates
     month_start = date(year, month, 1)
     month_end = date(year, month, calendar.monthrange(year, month)[1])
-    all_trading_days_in_month = get_trading_days_in_range(cursor, symbol, month_start, month_end)
+    # Extend range slightly to ensure exit day calculation works near month end
+    extended_end_date = month_end + timedelta(days=45)
+    all_trading_days_full_range = get_trading_days_in_range(cursor, symbol, month_start, extended_end_date)
+    trading_days_map = {day: True for day in all_trading_days_full_range}
+
+    all_trading_days_in_month = [d for d in all_trading_days_full_range if d.year == year and d.month == month]
 
     if not all_trading_days_in_month:
         logging.warning(f"No trading days found for {symbol} {year}-{month}. Skipping.")
@@ -349,6 +394,7 @@ def run_backtest_month(symbol: str, year: int, month: int, index_symbols: set[st
         insert_backtest_result(cursor, result)
         return
 
+    # Store initial entry details
     result["call_entry_strike"] = call_option["strike"]
     result["put_entry_strike"] = put_option["strike"]
     result["call_entry_delta"] = call_option["delta"]
@@ -356,128 +402,166 @@ def run_backtest_month(symbol: str, year: int, month: int, index_symbols: set[st
     result["call_entry_price"] = call_option["settle"]
     result["put_entry_price"] = put_option["settle"]
     result["entry_credit"] = call_option["settle"] + put_option["settle"]
-    logging.info(f"Entry: Sell CE {call_option['strike']} @ {call_option['settle']:.2f} (Δ {call_option['delta']:.2f}), Sell PE {put_option['strike']} @ {put_option['settle']:.2f} (Δ {put_option['delta']:.2f}). Credit: {result['entry_credit']:.2f}")
 
-    is_index_flag = is_index(symbol, index_symbols)
-    exit_date = find_exit_day(cursor, symbol, expiry_30d, is_index_flag)
-    if not exit_date:
-        logging.warning(f"Could not determine exit date for {symbol} before {expiry_30d}. Skipping trade result.")
-        result["skipped_reason"] = "Cannot Find Exit Date"
+    # Track current state of the strangle legs
+    current_call_strike = result["call_entry_strike"]
+    current_put_strike = result["put_entry_strike"]
+    # Price at which the current leg was sold (initially the entry price)
+    current_call_sold_price = result["call_entry_price"]
+    current_put_sold_price = result["put_entry_price"]
+    total_adjustment_pnl = 0.0
+
+    logging.info(f"Entry: Sell CE {current_call_strike} @ {current_call_sold_price:.2f} (Δ {result['call_entry_delta']:.2f}), "
+                 f"Sell PE {current_put_strike} @ {current_put_sold_price:.2f} (Δ {result['put_entry_delta']:.2f}). "
+                 f"Credit: {result['entry_credit']:.2f}")
+
+    # Determine Exit Date
+    is_idx = is_index(symbol, index_symbols)
+    exit_date = find_exit_day(cursor, symbol, expiry_30d, is_idx)
+    if not exit_date or exit_date <= entry_date:
+        logging.warning(f"Could not determine valid exit date before expiry {expiry_30d} for {symbol}. Skipping.")
+        result["skipped_reason"] = "No Valid Exit Date"
         insert_backtest_result(cursor, result)
         return
     result["exit_date"] = exit_date
-    logging.info(f"Exit Date: {exit_date}")
+    logging.info(f"Target Exit Date: {exit_date} (Expiry: {expiry_30d})")
 
-    # --- Delta Hedging Logic --- 
-    current_hedge_position = 0.0
-    total_hedge_pnl = 0.0
-    last_hedge_price = entry_metrics["underlying_price"] # Price at which current position was established/last hedged
+    # Find weekly adjustment dates
+    hedge_dates = find_weekly_hedge_dates(entry_date, exit_date, trading_days_map)
+    logging.info(f"Adjustment Dates: {hedge_dates}")
 
-    # Get all trading days between entry and exit for hedge date finding
-    all_trading_days_in_trade = get_trading_days_in_range(cursor, symbol, entry_date, exit_date)
-    trading_days_map = {day: True for day in all_trading_days_in_trade}
-
-    weekly_hedge_dates = find_weekly_hedge_dates(entry_date, exit_date, trading_days_map)
-    logging.info(f"Hedging Dates: {weekly_hedge_dates}")
-
-    for hedge_date in weekly_hedge_dates:
-        if hedge_date >= exit_date: # Don't hedge on or after exit day
-            continue
-
+    # --- Leg Adjustment Loop (Based on PPT) ---
+    for hedge_date in hedge_dates:
+        logging.debug(f"--- Adjustment Check: {hedge_date} ---")
         hedge_metrics = get_metrics_for_day(cursor, symbol, hedge_date)
-        if not hedge_metrics or hedge_metrics.get("underlying_price") is None or not hedge_metrics.get("option_chain"):
-            logging.warning(f"Missing metrics/price/chain for hedge on {hedge_date}. Skipping hedge.")
+        if not hedge_metrics or not hedge_metrics.get("option_chain") or hedge_metrics.get("underlying_price") is None:
+            logging.warning(f"Missing metrics/chain/price for {symbol} on adjustment date {hedge_date}. Skipping adjustment.")
             continue
 
-        hedge_price = hedge_metrics["underlying_price"]
         hedge_option_chain = hedge_metrics["option_chain"]
+        hedge_price_underlying = hedge_metrics["underlying_price"]
 
-        # Calculate PnL from existing hedge position before adjusting
-        if current_hedge_position != 0:
-            price_change = hedge_price - last_hedge_price
-            pnl_from_position = current_hedge_position * price_change
-            total_hedge_pnl += pnl_from_position
-            # logging.debug(f"Hedge PNL ({hedge_date}): Pos={current_hedge_position:.2f}, PriceChange={price_change:.2f}, PNL={pnl_from_position:.2f}, Total={total_hedge_pnl:.2f}")
+        # Get current data for the open legs
+        call_data_hedge = get_option_data(hedge_option_chain, expiry_30d, current_call_strike, "CE")
+        put_data_hedge = get_option_data(hedge_option_chain, expiry_30d, current_put_strike, "PE")
 
-        # Get current deltas of the strangle legs
-        call_data_hedge = get_option_data(hedge_option_chain, expiry_30d, result["call_entry_strike"], "CE")
-        put_data_hedge = get_option_data(hedge_option_chain, expiry_30d, result["put_entry_strike"], "PE")
+        if not call_data_hedge or not put_data_hedge:
+            logging.warning(f"Could not find current option data for adjustment on {hedge_date}. Skipping adjustment.")
+            continue
 
-        current_call_delta = call_data_hedge["delta"] if call_data_hedge else 0.0
-        current_put_delta = put_data_hedge["delta"] if put_data_hedge else 0.0
+        current_call_price = call_data_hedge["settle"]
+        current_put_price = put_data_hedge["settle"]
 
-        # Portfolio Delta = - (Call Delta + Put Delta) (from short positions)
-        strangle_net_delta = - (current_call_delta + current_put_delta)
+        # Determine the 'profitable' leg to close (the one cheaper to buy back)
+        close_call = current_call_price < current_put_price
 
-        hedge_position_delta = current_hedge_position # Delta of underlying is 1
-        total_portfolio_delta = strangle_net_delta + hedge_position_delta
+        if close_call:
+            # Close the Call leg
+            adjustment_pnl = current_call_sold_price - current_call_price # PNL = Sold Price - Buyback Price
+            total_adjustment_pnl += adjustment_pnl
+            logging.info(f"Adjustment ({hedge_date}): Closing Call {current_call_strike} @ {current_call_price:.2f} (Sold @ {current_call_sold_price:.2f}). PNL: {adjustment_pnl:.2f}")
 
-        required_hedge_adjustment = -total_portfolio_delta # Amount of underlying to buy/sell
+            # Find a new Call leg with price near the current Put price
+            target_price = current_put_price
+            new_call_option = find_option_near_price(hedge_option_chain, expiry_30d, target_price, "CE")
 
-        if abs(required_hedge_adjustment) > 0.001: # Avoid tiny adjustments
-            # Simulate hedge trade - PnL is realized when position changes or is closed
-            # Cost basis adjustment happens here
-            logging.info(f"Hedge ({hedge_date}): StrangleΔ={strangle_net_delta:.2f}, PortΔ={total_portfolio_delta:.2f}, Adjusting by {required_hedge_adjustment:.2f} @ {hedge_price:.2f}")
-            current_hedge_position += required_hedge_adjustment
-            last_hedge_price = hedge_price # Update price basis for the new position
+            if new_call_option:
+                current_call_strike = new_call_option["strike"]
+                current_call_sold_price = new_call_option["settle"]
+                logging.info(f"Adjustment ({hedge_date}): Selling New Call {current_call_strike} @ {current_call_sold_price:.2f} (Target Price: {target_price:.2f})")
+            else:
+                logging.warning(f"Adjustment ({hedge_date}): Could not find suitable new Call near price {target_price:.2f}. Call leg remains closed.")
+                # How to handle this? Maybe stop adjusting? For now, assume we need a call leg.
+                # Let's mark the call leg as inactive? Or maybe just keep the old strike but don't trade?
+                # For simplicity, let's assume we always find one, or the strategy fails for the month.
+                # Revert PNL if we couldn't sell new leg?
+                # Let's assume failure for now if no replacement found.
+                logging.error(f"Failed to find replacement Call option on {hedge_date}. Aborting month.")
+                result["skipped_reason"] = f"Failed hedge adjustment on {hedge_date}"
+                insert_backtest_result(cursor, result)
+                return # Exit function for this month
         else:
-            # Update price basis even if no trade, for next PnL calculation
-            last_hedge_price = hedge_price
-            # logging.debug(f"Hedge ({hedge_date}): No adjustment needed. PortΔ={total_portfolio_delta:.2f}")
+            # Close the Put leg
+            adjustment_pnl = current_put_sold_price - current_put_price # PNL = Sold Price - Buyback Price
+            total_adjustment_pnl += adjustment_pnl
+            logging.info(f"Adjustment ({hedge_date}): Closing Put {current_put_strike} @ {current_put_price:.2f} (Sold @ {current_put_sold_price:.2f}). PNL: {adjustment_pnl:.2f}")
 
-    # --- End Delta Hedging Loop ---
+            # Find a new Put leg with price near the current Call price
+            target_price = current_call_price
+            new_put_option = find_option_near_price(hedge_option_chain, expiry_30d, target_price, "PE")
+
+            if new_put_option:
+                current_put_strike = new_put_option["strike"]
+                current_put_sold_price = new_put_option["settle"]
+                logging.info(f"Adjustment ({hedge_date}): Selling New Put {current_put_strike} @ {current_put_sold_price:.2f} (Target Price: {target_price:.2f})")
+            else:
+                logging.warning(f"Adjustment ({hedge_date}): Could not find suitable new Put near price {target_price:.2f}. Put leg remains closed.")
+                # Similar handling as above - assume failure for now.
+                logging.error(f"Failed to find replacement Put option on {hedge_date}. Aborting month.")
+                result["skipped_reason"] = f"Failed hedge adjustment on {hedge_date}"
+                insert_backtest_result(cursor, result)
+                return # Exit function for this month
+
+    # --- End Adjustment Loop ---
 
     # Get exit metrics
     exit_metrics = get_metrics_for_day(cursor, symbol, exit_date)
     if not exit_metrics or exit_metrics.get("underlying_price") is None or not exit_metrics.get("option_chain"):
         logging.warning(f"Missing exit metrics/price/chain for {symbol} on {exit_date}. Cannot calculate final PNL.")
         result["skipped_reason"] = "Missing Exit Data"
+        result["hedge_pnl_points"] = total_adjustment_pnl # Store adjustment PNL even if exit fails
         insert_backtest_result(cursor, result)
         return
 
     exit_price_underlying = exit_metrics["underlying_price"]
+    result["hedge_pnl_points"] = total_adjustment_pnl # Store final adjustment PNL
 
-    # Liquidate final hedge position
-    if current_hedge_position != 0:
-        price_change = exit_price_underlying - last_hedge_price
-        pnl_from_position = current_hedge_position * price_change
-        total_hedge_pnl += pnl_from_position
-        logging.info(f"Hedge Liquidation ({exit_date}): Closing {current_hedge_position:.2f} @ {exit_price_underlying:.2f}, PNL={pnl_from_position:.2f}, Total Hedge PNL={total_hedge_pnl:.2f}")
-        current_hedge_position = 0 # Reset position
-
-    result["hedge_pnl_points"] = total_hedge_pnl
-
-    # Find exit prices for strangle
+    # Find exit prices for the final state of the strangle legs
     exit_option_chain = exit_metrics["option_chain"]
-    call_exit_data = get_option_data(exit_option_chain, expiry_30d, result["call_entry_strike"], "CE")
-    put_exit_data = get_option_data(exit_option_chain, expiry_30d, result["put_entry_strike"], "PE")
+    call_exit_data = get_option_data(exit_option_chain, expiry_30d, current_call_strike, "CE")
+    put_exit_data = get_option_data(exit_option_chain, expiry_30d, current_put_strike, "PE")
 
     if not call_exit_data or not put_exit_data:
-        logging.warning(f"Could not find exit prices for sold options {symbol} on {exit_date}. Cannot calculate Strangle PNL.")
+        logging.warning(f"Could not find exit prices for final options (C:{current_call_strike}, P:{current_put_strike}) for {symbol} on {exit_date}. Cannot calculate Strangle PNL.")
         result["skipped_reason"] = "Missing Exit Price"
-        # Keep hedge PNL if calculated
-        insert_backtest_result(cursor, result)
+        insert_backtest_result(cursor, result) # Keep adjustment PNL
         return
 
     result["call_exit_price"] = call_exit_data["settle"]
     result["put_exit_price"] = put_exit_data["settle"]
-    result["exit_cost"] = result["call_exit_price"] + result["put_exit_price"]
 
-    strangle_pnl_points = result["entry_credit"] - result["exit_cost"]
-    result["pnl_points"] = strangle_pnl_points + total_hedge_pnl # Combined PNL
+    # Calculate PNL
+    # Initial strangle credit is fixed
+    initial_entry_credit = result["call_entry_price"] + result["put_entry_price"]
+    # Final exit cost is for the last held legs
+    final_exit_cost = result["call_exit_price"] + result["put_exit_price"]
+    # PNL = Initial Credit - Final Exit Cost + PNL from adjustments
+    result["pnl_points"] = initial_entry_credit - final_exit_cost + total_adjustment_pnl
+    result["entry_credit"] = initial_entry_credit # Keep original entry credit for reporting
+    result["exit_cost"] = final_exit_cost # Store final exit cost
 
-    logging.info(f"Exit Strangle: Buy CE {result['call_entry_strike']} @ {result['call_exit_price']:.2f}, Buy PE {result['put_entry_strike']} @ {result['put_exit_price']:.2f}. Cost: {result['exit_cost']:.2f}")
-    logging.info(f"Result: Strangle PNL={strangle_pnl_points:.2f}, Hedge PNL={total_hedge_pnl:.2f}, Total PNL = {result['pnl_points']:.2f} points")
+    logging.info(f"Exit Strangle: Buy CE {current_call_strike} @ {result['call_exit_price']:.2f}, Buy PE {current_put_strike} @ {result['put_exit_price']:.2f}. Cost: {final_exit_cost:.2f}")
+    logging.info(f"Result: Initial Credit={initial_entry_credit:.2f}, Final Cost={final_exit_cost:.2f}, Adjustment PNL={total_adjustment_pnl:.2f}, Total PNL = {result['pnl_points']:.2f} points")
 
     insert_backtest_result(cursor, result)
 
 # --- Main Execution Logic ---
 
 def main():
-    SYMBOLS_JSON = ROOT_DIR.parent / "nse_fno_scripts.json"
+    # Assuming nse_fno_scripts.json is in the parent directory of the script's directory
+    script_dir = Path(__file__).resolve().parent
+    SYMBOLS_JSON = script_dir.parent / "nse_fno_scripts.json"
     if not SYMBOLS_JSON.exists():
-       logging.error(f"{SYMBOLS_JSON} not found.")
-       return
+       # Try looking in the current script's directory as a fallback
+       SYMBOLS_JSON = script_dir / "nse_fno_scripts.json"
+       if not SYMBOLS_JSON.exists():
+           logging.error(f"nse_fno_scripts.json not found in {script_dir.parent} or {script_dir}.")
+           return
+       else:
+           logging.warning(f"Found nse_fno_scripts.json in {script_dir}, expected in parent directory.")
+    else:
+        logging.info(f"Using symbols file: {SYMBOLS_JSON}")
+
 
     all_symbols, index_symbols = load_symbols_info(SYMBOLS_JSON)
     if not all_symbols:
@@ -488,12 +572,13 @@ def main():
     start_year = end_year - 4
 
     # --- MODIFY HERE FOR TESTING --- #
-    # Example: Run only for HDFCBANK
-    symbols_to_run = ["HDFCBANK"]
+    # Example: Run only for HDFCBANK for a few months
+    symbols_to_run = ["RELIANCE"]
     years_to_run = [2022, 2023, 2024, 2025]
+    months_to_run = [1, 2, 3, 4, 5, 6, 72, 8, 9, 10, 11, 1] # Limit months for testing
     # symbols_to_run = all_symbols # Run for all symbols
     # years_to_run = range(start_year, end_year + 1)
-    months_to_run = range(1, 13) # All months
+    # months_to_run = range(1, 13) # All months
     # --- END MODIFY --- #
 
     processed_count = 0
@@ -504,7 +589,25 @@ def main():
             logging.info("Database connection successful.")
             for symbol in symbols_to_run:
                 for year in years_to_run:
+                    # Ensure year is within a reasonable range if needed
+                    if year < 2010 or year > datetime.now().year + 1:
+                        logging.warning(f"Skipping invalid year {year} for {symbol}")
+                        continue
+
                     for month in months_to_run:
+                        # Ensure month is valid
+                        if not 1 <= month <= 12:
+                            logging.warning(f"Skipping invalid month {month} for {symbol} {year}")
+                            continue
+
+                        # Prevent running for future dates
+                        current_date = date.today()
+                        if year > current_date.year or (year == current_date.year and month >= current_date.month):
+                            logging.info(f"Skipping future or current month: {symbol} {year}-{month:02d}")
+                            # Update total_tasks if skipping future months dynamically
+                            # total_tasks -=1 # This might complicate progress reporting
+                            continue
+
                         try:
                             with conn.cursor() as cur:
                                 run_backtest_month(symbol, year, month, index_symbols, cur)
@@ -514,20 +617,25 @@ def main():
                             try: conn.rollback()
                             except Exception as rb_e:
                                 logging.error(f"Rollback failed: {rb_e}")
-                        processed_count += 1
-                        if processed_count % 10 == 0 or processed_count == total_tasks:
-                            logging.info(f"Progress: {processed_count} / {total_tasks} months processed.")
-            logging.info(f"Backtest finished. Processed {processed_count} months.")
+                        finally:
+                            processed_count += 1
+                            if processed_count % 10 == 0 or processed_count == total_tasks:
+                                logging.info(f"Progress: {processed_count} / {total_tasks} (approx) months processed.")
+
+            logging.info(f"Backtest finished. Processed approximately {processed_count} months.")
+    except OperationalError as db_err:
+        logging.error(f"Database connection error during backtest: {db_err}")
     except Exception as e:
-        logging.exception("An error occurred during the backtesting process.")
+        logging.exception("An unexpected error occurred during the backtesting process.")
     finally:
         if _POOL:
             _POOL.closeall()
             logging.info("Connection pool closed.")
 
 if __name__ == "__main__":
-    if not ROOT_DIR.exists():
-        ROOT_DIR.mkdir(parents=True, exist_ok=True)
+    # Ensure ROOT_DIR exists if needed (though script doesn't write there directly)
+    # if not ROOT_DIR.exists():
+    #     ROOT_DIR.mkdir(parents=True, exist_ok=True)
     main()
 
 
