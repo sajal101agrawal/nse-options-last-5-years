@@ -7,6 +7,8 @@ It fuses Bhavcopy files, Yahoo spot prices, interest‑rate curves, and earnings
 > 🛠️ **Primary use‑cases** Quant research · Options & volatility dashboards · AI model training
 > ⚠️ **Disclaimer** Educational/research use only. Respect NSE & data‑provider T\&Cs.
 
+> 🚀 **Need the production version?** [**nse-option-chain-database**](https://github.com/sajal101agrawal/nse-option-chain-database) is the successor to this toolkit. It is a self-hosted NSE option chain database and API with 60M+ contract rows, IV and Greeks, VRP, skew, forward factor, straddle backtests, and live Kite/Dhan option chains (FastAPI + PostgreSQL/TimescaleDB + Redis).
+
 ---
 
 ## 📁 Project layout
@@ -170,6 +172,8 @@ The ETL performs `INSERT … ON CONFLICT DO UPDATE`, so reruns are ide
 ---
 
 ## 🔮 Road‑map
+
+> Live broker option chains, TimescaleDB storage, and dashboard APIs now ship in [nse-option-chain-database](https://github.com/sajal101agrawal/nse-option-chain-database).
 
 * 🌐 Live chain capture via broker WebSockets (Dhan, Zerodha, FYERS)
 * 📈 Real‑time dashboards (Plotly‑Dash & Superset)
